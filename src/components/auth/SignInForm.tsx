@@ -27,9 +27,9 @@ const SignInForm = () => {
                                 <div className="space-y-6">
                                     <div>
                                         <Label>
-                                            Email <span className="text-error-500">*</span>{" "}
+                                            Username <span className="text-error-500">*</span>{" "}
                                         </Label>
-                                        <Input placeholder="info@gmail.com" type="email" />
+                                        <Input type="text" placeholder="Enter your username" defaultValue="demo" />
                                     </div>
                                     <div>
                                         <Label>
@@ -39,6 +39,7 @@ const SignInForm = () => {
                                             <Input
                                                 type={showPassword ? "text" : "password"}
                                                 placeholder="Enter your password"
+                                                defaultValue="demo"
                                             />
                                             <span
                                                 onClick={() => setShowPassword(!showPassword)}
@@ -67,9 +68,15 @@ const SignInForm = () => {
                                         </Link>
                                     </div>
                                     <div>
-                                        <Button className="w-full" size="sm">
+                                        {/* <Button className="w-full" size="sm">
                                             Sign in
-                                        </Button>
+                                        </Button> */}
+                                        <Link
+                                            href="/dashboard"
+                                            className="inline-flex w-full items-center justify-center rounded-lg bg-brand-500 px-5 py-3.5 text-sm font-medium text-white shadow-theme-xs hover:bg-brand-600 dark:bg-brand-400 dark:hover:bg-brand-500"
+                                        >
+                                            Sign in
+                                        </Link>
                                     </div>
                                 </div>
                             </form>
