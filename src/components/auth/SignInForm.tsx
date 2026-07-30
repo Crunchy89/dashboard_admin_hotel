@@ -5,17 +5,14 @@ import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { EyeCloseIcon, EyeIcon } from "@/icon";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 
-export default function SignInForm() {
+const SignInForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12 lg:py-24 lg:flex-row">
-            <div className="flex flex-col flex-1 lg:w-1/2 w-full">
-                <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
-                </div>
-                <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12 dark:bg-gray-950 lg:py-24">
+            <div className="w-full max-w-md md:rounded-2xl md:bg-white p-6 sm:p-8 lg:p-10 md:shadow-xl md:shadow-gray-200/70 dark:bg-gray-900 dark:lg:shadow-black/30">
                     <div>
                         <div className="mb-5 sm:mb-8">
                             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
@@ -78,8 +75,9 @@ export default function SignInForm() {
                             </form>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     );
-}
+};
+
+export default SignInForm;
