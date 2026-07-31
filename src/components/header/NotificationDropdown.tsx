@@ -175,7 +175,7 @@ export default function NotificationDropdown() {
               <DropdownItem
                 onItemClick={closeDropdown}
                 tag="a"
-                href="/laporan"
+                href="/dashboard/laporan"
                 className="flex flex-col gap-2 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5"
               >
                 <span className="flex items-center justify-between gap-2">
@@ -200,7 +200,7 @@ export default function NotificationDropdown() {
         </ul>
 
         <Link
-          href="/laporan"
+          href="/dashboard/laporan"
           className="mt-3 block rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         >
           View All Reports

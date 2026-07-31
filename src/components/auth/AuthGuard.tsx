@@ -4,26 +4,54 @@ import { useAppSelector } from "@/store/hooks";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const AUTH_ROUTES = ["/", "/signin", "/signup"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/features",
+  "/pricing",
+  "/reviews",
+  "/blog",
+  "/faq",
+  "/about",
+  "/error-404",
+];
+const AUTH_ROUTES = ["/admin/signin", "/signin", "/signup"];
+
+function isPublicRoute(pathname: string) {
+  return PUBLIC_ROUTES.includes(pathname);
+}
+
+function isAuthRoute(pathname: string) {
+  return AUTH_ROUTES.includes(pathname);
+}
+
+function isProtectedRoute(pathname: string) {
+  return pathname === "/dashboard" || pathname.startsWith("/dashboard/");
+}
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated, hydrated } = useAppSelector((state) => state.auth);
-  const isAuthRoute = AUTH_ROUTES.includes(pathname);
+  const publicRoute = isPublicRoute(pathname);
+  const authRoute = isAuthRoute(pathname);
+  const protectedRoute = isProtectedRoute(pathname);
 
   useEffect(() => {
     if (!hydrated) return;
 
-    if (!isAuthenticated && !isAuthRoute) {
-      router.replace("/");
+    if (protectedRoute && !isAuthenticated) {
+      router.replace("/admin/signin");
       return;
     }
 
-    if (isAuthenticated && isAuthRoute) {
+    if (authRoute && isAuthenticated) {
       router.replace("/dashboard");
     }
-  }, [hydrated, isAuthenticated, isAuthRoute, router]);
+  }, [hydrated, isAuthenticated, authRoute, protectedRoute, router]);
+
+  if (publicRoute) {
+    return <>{children}</>;
+  }
 
   if (!hydrated) {
     return (
@@ -33,8 +61,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isAuthenticated && !isAuthRoute) return null;
-  if (isAuthenticated && isAuthRoute) return null;
+  if (protectedRoute && !isAuthenticated) return null;
+  if (authRoute && isAuthenticated) return null;
 
   return <>{children}</>;
 }

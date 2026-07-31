@@ -2,43 +2,14 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AUTH_COOKIE } from "@/lib/auth-constants";
 
-const AUTH_ROUTES = ["/", "/signin", "/signup"];
-
-const PROTECTED_PREFIXES = [
-  "/dashboard",
-  "/user",
-  "/staff",
-  "/client-points",
-  "/packages",
-  "/finance",
-  "/salary",
-  "/chat",
-  "/calendar",
-  "/maintenance",
-  "/laporan",
-  "/profile",
-  "/alerts",
-  "/avatars",
-  "/badge",
-  "/buttons",
-  "/images",
-  "/modals",
-  "/videos",
-  "/form-elements",
-  "/basic-tables",
-  "/line-chart",
-  "/bar-chart",
-  "/blank",
-];
+const AUTH_ROUTES = ["/admin/signin", "/signin", "/signup"];
 
 function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.includes(pathname);
 }
 
 function isProtectedRoute(pathname: string) {
-  return PROTECTED_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-  );
+  return pathname === "/dashboard" || pathname.startsWith("/dashboard/");
 }
 
 export function proxy(request: NextRequest) {
@@ -48,7 +19,7 @@ export function proxy(request: NextRequest) {
 
   if (isProtectedRoute(pathname) && !isLoggedIn) {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
+    url.pathname = "/admin/signin";
     url.searchParams.set("from", pathname);
     return NextResponse.redirect(url);
   }

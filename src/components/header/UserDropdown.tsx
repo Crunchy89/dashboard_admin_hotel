@@ -37,7 +37,7 @@ export default function UserDropdown() {
     clearAuthUser();
     dispatch(clearCredentials());
     closeDropdown();
-    router.replace("/");
+    router.replace("/admin/signin");
   }
 
   const displayName = user?.username ?? "admin";
