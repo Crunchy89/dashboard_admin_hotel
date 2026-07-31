@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import { sectionTone, stats } from "@/components/marketing/data";
-import { PageHero } from "@/components/marketing/ui";
+import {
+  MarketingSection,
+  PageHero,
+  StatsGrid,
+} from "@/components/marketing/ui";
 
 export const metadata: Metadata = {
   title: "About | Smart Hotel",
@@ -18,9 +22,8 @@ export default function AboutPage() {
         description="Smart Hotel is the operating layer for affiliated properties — rooms, devices, points, and the teams that keep stays running."
         toneClass={sectionTone.about}
       />
-
-      <section className={`${sectionTone.hero} px-6 py-16 sm:px-8`}>
-        <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-2">
+      <MarketingSection toneClass={sectionTone.hero} className="py-16">
+        <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-5 text-base leading-relaxed text-white/70">
             <p>
               We started with a simple idea: guests should feel the same calm
@@ -45,19 +48,9 @@ export default function AboutPage() {
               Explore packages
             </Link>
           </div>
-
-          <dl className="grid grid-cols-2 gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-            {stats.map((stat) => (
-              <div key={stat.label}>
-                <dt className="text-sm text-white/50">{stat.label}</dt>
-                <dd className="mt-2 text-3xl font-semibold tracking-tight">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <StatsGrid items={stats} variant="panel" />
         </div>
-      </section>
+      </MarketingSection>
     </main>
   );
 }

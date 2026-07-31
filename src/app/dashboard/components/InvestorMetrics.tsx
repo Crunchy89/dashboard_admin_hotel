@@ -1,46 +1,8 @@
 "use client";
 
-type MetricTone = "success" | "error";
+import { SummaryMetricGrid } from "@/components/dashboard/DashboardPanel";
 
-function MetricGrid({
-  items,
-  columns = "xl:grid-cols-6",
-}: {
-  items: {
-    label: string;
-    value: string;
-    change: string;
-    tone?: MetricTone;
-  }[];
-  columns?: string;
-}) {
-  return (
-    <div className={`grid grid-cols-2 gap-3 sm:grid-cols-3 ${columns}`}>
-      {items.map((metric) => (
-        <div
-          key={metric.label}
-          className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]"
-        >
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {metric.label}
-          </p>
-          <p className="mt-2 text-lg font-bold text-gray-800 dark:text-white/90">
-            {metric.value}
-          </p>
-          <p
-            className={`mt-1 text-xs font-medium ${
-              metric.tone === "error"
-                ? "text-error-600 dark:text-error-500"
-                : "text-success-600 dark:text-success-500"
-            }`}
-          >
-            {metric.change}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-}
+type MetricTone = "success" | "error";
 
 export default function InvestorMetrics() {
   const userMetrics: {
@@ -113,8 +75,16 @@ export default function InvestorMetrics() {
 
   return (
     <div className="space-y-4">
-      <MetricGrid items={userMetrics} columns="xl:grid-cols-5" />
-      <MetricGrid items={financeMetrics} columns="xl:grid-cols-6" />
+      <SummaryMetricGrid
+        items={userMetrics}
+        columns="xl:grid-cols-5"
+        size="sm"
+      />
+      <SummaryMetricGrid
+        items={financeMetrics}
+        columns="xl:grid-cols-6"
+        size="sm"
+      />
     </div>
   );
 }

@@ -7,6 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DashboardPanel,
+  SummaryMetricGrid,
+  TableHeadRow,
+} from "@/components/dashboard/DashboardPanel";
 
 interface ClientPointRow {
   id: string;
@@ -133,56 +138,31 @@ export default function ClientPointsTable() {
 
   return (
     <div className="space-y-4 md:space-y-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Total Clients
-          </p>
-          <p className="mt-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            {totalClients.toLocaleString("en-US")}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Total Bookings
-          </p>
-          <p className="mt-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            {totalBookings.toLocaleString("en-US")}
-          </p>
-        </div>
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Points Issued
-          </p>
-          <p className="mt-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-            {totalPoints.toLocaleString("en-US")}
-          </p>
-        </div>
-      </div>
+      <SummaryMetricGrid
+        items={[
+          {
+            label: "Total Clients",
+            value: totalClients.toLocaleString("en-US"),
+          },
+          {
+            label: "Total Bookings",
+            value: totalBookings.toLocaleString("en-US"),
+          },
+          {
+            label: "Points Issued",
+            value: totalPoints.toLocaleString("en-US"),
+          },
+        ]}
+      />
 
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Client Point Balance
-          </h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Points earned when clients book rooms at affiliated hotels
-          </p>
-        </div>
+      <DashboardPanel
+        title="Client Point Balance"
+        description="Points earned when clients book rooms at affiliated hotels"
+      >
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-gray-800">
-              <TableRow>
-                {tableHeadings.map((heading) => (
-                  <TableCell
-                    key={heading}
-                    isHeader
-                    className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    {heading}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <TableHeadRow headings={tableHeadings} />
             </TableHeader>
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
               {clients.map((client) => (
@@ -215,7 +195,7 @@ export default function ClientPointsTable() {
             </TableBody>
           </Table>
         </div>
-      </div>
+      </DashboardPanel>
     </div>
   );
 }

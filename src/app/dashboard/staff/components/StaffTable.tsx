@@ -1,6 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import {
+  DashboardPanel,
+  TableHeadRow,
+} from "@/components/dashboard/DashboardPanel";
 import Badge from "@/components/ui/badge/Badge";
 import Button from "@/components/ui/button/Button";
 import Label from "@/components/form/Label";
@@ -226,35 +230,19 @@ export default function StaffTable() {
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
-        <div className="flex flex-col gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Internal Employee List
-            </h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Manage internal company team: technicians, programmers, HR, and more
-            </p>
-          </div>
+      <DashboardPanel
+        title="Internal Employee List"
+        description="Manage internal company team: technicians, programmers, HR, and more"
+        action={
           <Button size="sm" onClick={handleOpenModal}>
             Add Staff
           </Button>
-        </div>
-
+        }
+      >
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="border-b border-gray-100 dark:border-gray-800">
-              <TableRow>
-                {tableHeaders.map((h) => (
-                  <TableCell
-                    key={h}
-                    isHeader
-                    className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    {h}
-                  </TableCell>
-                ))}
-              </TableRow>
+              <TableHeadRow headings={tableHeaders} />
             </TableHeader>
             <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
               {rows.map((row) => (
@@ -289,7 +277,7 @@ export default function StaffTable() {
             </TableBody>
           </Table>
         </div>
-      </div>
+      </DashboardPanel>
 
       <Modal
         isOpen={isOpen}

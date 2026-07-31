@@ -2,6 +2,10 @@
 
 import Badge from "@/components/ui/badge/Badge";
 import {
+  DashboardPanel,
+  TableHeadRow,
+} from "@/components/dashboard/DashboardPanel";
+import {
   Table,
   TableBody,
   TableCell,
@@ -114,21 +118,11 @@ export default function UsersTable() {
   ];
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+    <DashboardPanel>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-gray-800">
-            <TableRow>
-              {tableHeadings.map((heading) => (
-                <TableCell
-                  key={heading}
-                  isHeader
-                  className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-                >
-                  {heading}
-                </TableCell>
-              ))}
-            </TableRow>
+            <TableHeadRow headings={tableHeadings} />
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
             {users.map((user) => (
@@ -163,6 +157,6 @@ export default function UsersTable() {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </DashboardPanel>
   );
 }
