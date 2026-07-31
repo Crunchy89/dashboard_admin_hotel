@@ -22,32 +22,32 @@ const monthlyCategories = [
   "Des",
 ];
 
-const yearlyCategories = ["2021", "2022", "2023", "2024", "2025", "2026"];
+const yearlyCategories = ["2022", "2023", "2024", "2025", "2026"];
 
 const monthlySeries = [
   {
     name: "Smart Hotel",
-    data: [86, 92, 110, 128, 145, 160, 178, 195, 210, 235, 250, 268],
+    data: [0.14, 0.15, 0.17, 0.18, 0.19, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.28],
   },
   {
     name: "Smart Home",
-    data: [210, 245, 280, 320, 355, 390, 430, 470, 510, 560, 610, 650],
+    data: [0.14, 0.16, 0.17, 0.19, 0.20, 0.21, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28],
   },
 ];
 
 const yearlySeries = [
   {
     name: "Smart Hotel",
-    data: [420, 680, 980, 1450, 2100, 3248],
+    data: [0.38, 0.72, 1.15, 1.84, 2.65],
   },
   {
     name: "Smart Home",
-    data: [980, 1650, 2800, 4200, 6800, 9238],
+    data: [0.44, 0.74, 1.09, 1.54, 2.17],
   },
 ];
 
-export default function SubscriptionGrowthChart() {
-  const [period, setPeriod] = useState<Period>("monthly");
+export default function SegmentRevenueChart() {
+  const [period, setPeriod] = useState<Period>("yearly");
 
   const options: ApexOptions = {
     legend: {
@@ -59,46 +59,46 @@ export default function SubscriptionGrowthChart() {
     colors: ["#465FFF", "#9CB9FF"],
     chart: {
       fontFamily: "Outfit, sans-serif",
-      height: 310,
-      type: "area",
+      height: 320,
+      type: "bar",
+      stacked: true,
       toolbar: { show: false },
     },
-    stroke: {
-      curve: "smooth",
-      width: [2, 2],
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        opacityFrom: 0.55,
-        opacityTo: 0,
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "45%",
+        borderRadius: 6,
+        borderRadiusApplication: "end",
       },
     },
-    markers: {
-      size: 0,
-      strokeColors: "#fff",
-      strokeWidth: 2,
-      hover: { size: 6 },
-    },
-    grid: {
-      xaxis: { lines: { show: false } },
-      yaxis: { lines: { show: true } },
-    },
     dataLabels: { enabled: false },
-    tooltip: { enabled: true },
+    stroke: {
+      show: true,
+      width: 3,
+      colors: ["transparent"],
+    },
     xaxis: {
-      type: "category",
       categories: period === "monthly" ? monthlyCategories : yearlyCategories,
       axisBorder: { show: false },
       axisTicks: { show: false },
-      tooltip: { enabled: false },
     },
     yaxis: {
+      title: {
+        text: "Revenue (Rp miliar)",
+        style: { fontSize: "12px", color: "#98A2B3" },
+      },
       labels: {
-        style: {
-          fontSize: "12px",
-          colors: ["#6B7280"],
-        },
+        style: { fontSize: "12px", colors: ["#6B7280"] },
+      },
+    },
+    grid: {
+      yaxis: { lines: { show: true } },
+    },
+    fill: { opacity: 1 },
+    tooltip: {
+      y: {
+        formatter: (val: number) => `Rp ${val.toFixed(2)} M`,
       },
     },
   };
@@ -110,19 +110,19 @@ export default function SubscriptionGrowthChart() {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
-      <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Pertumbuhan Penyewaan
+            Revenue Smart Hotel vs Smart Home
           </h3>
-          <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Pertumbuhan langganan aplikasi Smart Hotel & Smart Home
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Kontribusi pendapatan per segmen (Rp miliar)
           </p>
         </div>
         <div className="flex items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
           <button
             onClick={() => setPeriod("monthly")}
-            className={`px-3 py-2 font-medium rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
+            className={`rounded-md px-3 py-2 text-theme-sm font-medium ${getButtonClass(
               "monthly"
             )}`}
           >
@@ -130,7 +130,7 @@ export default function SubscriptionGrowthChart() {
           </button>
           <button
             onClick={() => setPeriod("yearly")}
-            className={`px-3 py-2 font-medium rounded-md text-theme-sm hover:text-gray-900 dark:hover:text-white ${getButtonClass(
+            className={`rounded-md px-3 py-2 text-theme-sm font-medium ${getButtonClass(
               "yearly"
             )}`}
           >
@@ -139,16 +139,12 @@ export default function SubscriptionGrowthChart() {
         </div>
       </div>
 
-      <div className="max-w-full overflow-x-auto custom-scrollbar">
-        <div className="min-w-[650px] xl:min-w-full">
-          <Chart
-            options={options}
-            series={period === "monthly" ? monthlySeries : yearlySeries}
-            type="area"
-            height={310}
-          />
-        </div>
-      </div>
+      <Chart
+        options={options}
+        series={period === "monthly" ? monthlySeries : yearlySeries}
+        type="bar"
+        height={320}
+      />
     </div>
   );
 }
