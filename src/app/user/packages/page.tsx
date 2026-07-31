@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function PackagesPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Paket" />
+      <PageBreadcrumb pageTitleKey="nav.packages" />
       <PackagesTable />
     </div>
   );

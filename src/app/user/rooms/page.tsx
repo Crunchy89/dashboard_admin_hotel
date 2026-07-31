@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function RoomsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Room" />
+      <PageBreadcrumb pageTitleKey="nav.rooms" />
       <RoomsTable />
     </div>
   );

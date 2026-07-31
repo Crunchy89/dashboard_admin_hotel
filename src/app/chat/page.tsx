@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Chat | Smart Hotel Admin",
-  description: "Balas pesan dan pertanyaan dari user",
+  title: "Messages | Smart Hotel Admin",
+  description: "Reply to messages and questions from users",
 };
 
 export default function ChatPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Chat" />
+      <PageBreadcrumb pageTitleKey="nav.chat" />
       <ChatInbox />
     </div>
   );

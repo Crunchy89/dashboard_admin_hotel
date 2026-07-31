@@ -1,3 +1,5 @@
+"use client";
+
 import Badge from "@/components/ui/badge/Badge";
 import {
   Table,
@@ -6,6 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useLanguage } from "@/context/LanguageContext";
+
+type RoomStatus = "online" | "offline" | "maintenance";
 
 interface RoomRow {
   id: string;
@@ -14,7 +19,7 @@ interface RoomRow {
   floor: string;
   type: string;
   devices: number;
-  status: "Online" | "Offline" | "Maintenance";
+  status: RoomStatus;
 }
 
 const rooms: RoomRow[] = [
@@ -25,7 +30,7 @@ const rooms: RoomRow[] = [
     floor: "1",
     type: "Deluxe",
     devices: 4,
-    status: "Online",
+    status: "online",
   },
   {
     id: "RM-205",
@@ -34,7 +39,7 @@ const rooms: RoomRow[] = [
     floor: "2",
     type: "Suite",
     devices: 7,
-    status: "Online",
+    status: "online",
   },
   {
     id: "RM-312",
@@ -43,7 +48,7 @@ const rooms: RoomRow[] = [
     floor: "3",
     type: "Ocean View",
     devices: 6,
-    status: "Maintenance",
+    status: "maintenance",
   },
   {
     id: "RM-408",
@@ -52,7 +57,7 @@ const rooms: RoomRow[] = [
     floor: "4",
     type: "Business",
     devices: 5,
-    status: "Offline",
+    status: "offline",
   },
   {
     id: "RM-012",
@@ -61,7 +66,7 @@ const rooms: RoomRow[] = [
     floor: "1",
     type: "Smart Home",
     devices: 18,
-    status: "Online",
+    status: "online",
   },
   {
     id: "RM-518",
@@ -70,35 +75,43 @@ const rooms: RoomRow[] = [
     floor: "5",
     type: "Garden View",
     devices: 5,
-    status: "Online",
+    status: "online",
   },
 ];
 
-const statusColor: Record<RoomRow["status"], "success" | "error" | "warning"> =
-  {
-    Online: "success",
-    Offline: "error",
-    Maintenance: "warning",
-  };
+const statusColor: Record<RoomRow["status"], "success" | "error" | "warning"> = {
+  online: "success",
+  offline: "error",
+  maintenance: "warning",
+};
 
 export default function RoomsTable() {
+  const { t } = useLanguage();
+
+  const tableHeadings = [
+    t("common.room"),
+    t("user.property"),
+    t("user.floor"),
+    t("user.type"),
+    t("common.device"),
+    t("common.status"),
+  ];
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-gray-800">
             <TableRow>
-              {["Room", "Properti", "Lantai", "Tipe", "Device", "Status"].map(
-                (h) => (
-                  <TableCell
-                    key={h}
-                    isHeader
-                    className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    {h}
-                  </TableCell>
-                )
-              )}
+              {tableHeadings.map((heading) => (
+                <TableCell
+                  key={heading}
+                  isHeader
+                  className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                >
+                  {heading}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -124,7 +137,7 @@ export default function RoomsTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[room.status]}>
-                    {room.status}
+                    {t(`status.${room.status}`)}
                   </Badge>
                 </TableCell>
               </TableRow>

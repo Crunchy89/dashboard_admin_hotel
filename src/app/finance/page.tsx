@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function FinancePage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Keuangan" />
+      <PageBreadcrumb pageTitleKey="nav.finance" />
       <MonthlyPaymentsTable />
     </div>
   );

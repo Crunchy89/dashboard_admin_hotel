@@ -4,12 +4,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+import { useLanguage } from "../context/LanguageContext";
 import {
   CalenderIcon,
   ChatIcon,
   ChevronDownIcon,
   DollarLineIcon,
+  FileIcon,
   GridIcon,
+  GroupIcon,
   HorizontaLDots,
   ListIcon,
   TaskIcon,
@@ -17,57 +20,68 @@ import {
 } from "../icon";
 
 type NavItem = {
-  name: string;
+  nameKey: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: { nameKey: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
-    name: "Dashboard",
+    nameKey: "nav.dashboard",
     path: "/dashboard",
   },
   {
     icon: <CalenderIcon />,
-    name: "Setup Tanggal",
+    nameKey: "nav.installation",
     path: "/calendar",
   },
   {
     icon: <TaskIcon />,
-    name: "Maintenance",
+    nameKey: "nav.maintenance",
     path: "/maintenance",
   },
   {
     icon: <ListIcon />,
-    name: "Laporan",
+    nameKey: "nav.reports",
     path: "/laporan",
   },
   {
     icon: <ChatIcon />,
-    name: "Chat",
+    nameKey: "nav.chat",
     path: "/chat",
   },
   {
+    icon: <GroupIcon />,
+    nameKey: "nav.staff",
+    path: "/staff",
+  },
+  {
     icon: <UserCircleIcon />,
-    name: "User",
+    nameKey: "nav.user",
     subItems: [
-      { name: "List User", path: "/user", pro: false },
-      { name: "Paket", path: "/user/packages", pro: false },
-      { name: "Room", path: "/user/rooms", pro: false },
-      { name: "Device", path: "/user/devices", pro: false },
+      { nameKey: "nav.listUser", path: "/user", pro: false },
+      { nameKey: "nav.packages", path: "/user/packages", pro: false },
+      { nameKey: "nav.rooms", path: "/user/rooms", pro: false },
+      { nameKey: "nav.devices", path: "/user/devices", pro: false },
     ],
   },
   {
     icon: <DollarLineIcon />,
-    name: "Keuangan",
+    nameKey: "nav.finance",
     path: "/finance",
+  },
+  {
+    icon: <FileIcon />,
+    nameKey: "nav.salary",
+    path: "/salary",
   },
 ];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+  const { t } = useLanguage();
   const pathname = usePathname();
 
   const renderMenuItems = (
@@ -76,7 +90,7 @@ const AppSidebar: React.FC = () => {
   ) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
-        <li key={nav.name}>
+        <li key={nav.nameKey}>
           {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
@@ -100,7 +114,7 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className={`menu-item-text`}>{nav.name}</span>
+                <span className={`menu-item-text`}>{t(nav.nameKey)}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
@@ -131,7 +145,7 @@ const AppSidebar: React.FC = () => {
                   {nav.icon}
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className={`menu-item-text`}>{nav.name}</span>
+                  <span className={`menu-item-text`}>{t(nav.nameKey)}</span>
                 )}
               </Link>
             )
@@ -151,7 +165,7 @@ const AppSidebar: React.FC = () => {
             >
               <ul className="mt-2 space-y-1 ml-9">
                 {nav.subItems.map((subItem) => (
-                  <li key={subItem.name}>
+                  <li key={subItem.nameKey}>
                     <Link
                       href={subItem.path}
                       className={`menu-dropdown-item ${
@@ -160,7 +174,7 @@ const AppSidebar: React.FC = () => {
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
-                      {subItem.name}
+                      {t(subItem.nameKey)}
                     </Link>
                   </li>
                 ))}
@@ -246,31 +260,17 @@ const AppSidebar: React.FC = () => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link href="/dashboard">
-          {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <Image
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-              <Image
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-            </>
-          ) : (
-            <Image
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
+        <Link href="/dashboard" className="flex items-center gap-2.5">
+          <Image
+            src="/images/logo/logo-icon.svg"
+            alt="Logo"
+            width={32}
+            height={32}
+          />
+          {(isExpanded || isHovered || isMobileOpen) && (
+            <span className="text-xl font-semibold text-gray-800 dark:text-white/90">
+              {t("nav.dashboard")}
+            </span>
           )}
         </Link>
       </div>
@@ -286,7 +286,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Menu"
+                  t("nav.menu")
                 ) : (
                   <HorizontaLDots />
                 )}

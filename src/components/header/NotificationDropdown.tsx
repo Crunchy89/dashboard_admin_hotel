@@ -1,86 +1,99 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { useLanguage } from "@/context/LanguageContext";
 
 type ReportType = "user" | "disconnected" | "error";
 
 interface ReportItem {
   id: string;
   type: ReportType;
-  title: string;
-  detail: string;
-  time: string;
+  titleKey: string;
+  detailKey: string;
+  timeValue: number;
+  timeUnit: "minutes" | "hours";
 }
 
-const reports: ReportItem[] = [
+const reportItems: ReportItem[] = [
   {
     id: "1",
     type: "error",
-    title: "Device Error",
-    detail: "Motion Sensor Hall · Oceanview Suites · Room 312",
-    time: "2 menit lalu",
+    titleKey: "header.deviceError",
+    detailKey: "header.reportDetail1",
+    timeValue: 2,
+    timeUnit: "minutes",
   },
   {
     id: "2",
     type: "disconnected",
-    title: "Device Disconnected",
-    detail: "Camera Entrance · Rumah Aruna · Main Unit",
-    time: "12 menit lalu",
+    titleKey: "header.deviceDisconnected",
+    detailKey: "header.reportDetail2",
+    timeValue: 12,
+    timeUnit: "minutes",
   },
   {
     id: "3",
     type: "user",
-    title: "Laporan User",
-    detail: "Skyline Business Hotel melaporkan lock tidak merespons",
-    time: "28 menit lalu",
+    titleKey: "header.userReport",
+    detailKey: "header.reportDetail3",
+    timeValue: 28,
+    timeUnit: "minutes",
   },
   {
     id: "4",
     type: "disconnected",
-    title: "Device Disconnected",
-    detail: "Smart Lock B3 · Skyline Business Hotel · Room 408",
-    time: "1 jam lalu",
+    titleKey: "header.deviceDisconnected",
+    detailKey: "header.reportDetail4",
+    timeValue: 1,
+    timeUnit: "hours",
   },
   {
     id: "5",
     type: "user",
-    title: "Laporan User",
-    detail: "Villa Melati meminta bantuan setup sensor baru",
-    time: "2 jam lalu",
+    titleKey: "header.userReport",
+    detailKey: "header.reportDetail5",
+    timeValue: 2,
+    timeUnit: "hours",
   },
   {
     id: "6",
     type: "error",
-    title: "Device Error",
-    detail: "Thermostat Zone 2 · Grand Horizon Hotel · Room 205",
-    time: "3 jam lalu",
+    titleKey: "header.deviceError",
+    detailKey: "header.reportDetail6",
+    timeValue: 3,
+    timeUnit: "hours",
   },
 ];
 
-const typeStyle: Record<
-  ReportType,
-  { badge: string; label: string }
-> = {
-  user: {
-    badge: "bg-brand-50 text-brand-500 dark:bg-brand-500/15 dark:text-brand-400",
-    label: "User",
-  },
-  disconnected: {
-    badge:
-      "bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400",
-    label: "Disconnected",
-  },
-  error: {
-    badge: "bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500",
-    label: "Error",
-  },
-};
-
 export default function NotificationDropdown() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
+
+  const typeStyle = useMemo<
+    Record<ReportType, { badge: string; labelKey: string }>
+  >(
+    () => ({
+      user: {
+        badge:
+          "bg-brand-50 text-brand-500 dark:bg-brand-500/15 dark:text-brand-400",
+        labelKey: "header.reportTypeUser",
+      },
+      disconnected: {
+        badge:
+          "bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400",
+        labelKey: "header.reportTypeDisconnected",
+      },
+      error: {
+        badge:
+          "bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500",
+        labelKey: "header.reportTypeError",
+      },
+    }),
+    []
+  );
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -95,12 +108,15 @@ export default function NotificationDropdown() {
     setNotifying(false);
   };
 
+  const formatTimeAgo = (value: number, unit: "minutes" | "hours") =>
+    `${value} ${t(unit === "minutes" ? "header.minutesAgo" : "header.hoursAgo")}`;
+
   return (
     <div className="relative">
       <button
         className="relative dropdown-toggle flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
         onClick={handleClick}
-        aria-label="Laporan"
+        aria-label={t("header.notifications")}
       >
         <span
           className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400 ${
@@ -132,7 +148,7 @@ export default function NotificationDropdown() {
       >
         <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-3 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-            Laporan
+            {t("header.notifications")}
           </h5>
           <button
             onClick={toggleDropdown}
@@ -156,7 +172,7 @@ export default function NotificationDropdown() {
         </div>
 
         <ul className="custom-scrollbar flex h-auto flex-col overflow-y-auto">
-          {reports.map((report) => (
+          {reportItems.map((report) => (
             <li key={report.id}>
               <DropdownItem
                 onItemClick={closeDropdown}
@@ -166,18 +182,20 @@ export default function NotificationDropdown() {
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="font-medium text-theme-sm text-gray-800 dark:text-white/90">
-                    {report.title}
+                    {t(report.titleKey)}
                   </span>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${typeStyle[report.type].badge}`}
                   >
-                    {typeStyle[report.type].label}
+                    {t(typeStyle[report.type].labelKey)}
                   </span>
                 </span>
                 <span className="text-theme-sm text-gray-500 dark:text-gray-400">
-                  {report.detail}
+                  {t(report.detailKey)}
                 </span>
-                <span className="text-theme-xs text-gray-400">{report.time}</span>
+                <span className="text-theme-xs text-gray-400">
+                  {formatTimeAgo(report.timeValue, report.timeUnit)}
+                </span>
               </DropdownItem>
             </li>
           ))}
@@ -187,7 +205,7 @@ export default function NotificationDropdown() {
           href="/laporan"
           className="mt-3 block rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         >
-          Lihat Semua Laporan
+          {t("header.viewAllReports")}
         </Link>
       </Dropdown>
     </div>

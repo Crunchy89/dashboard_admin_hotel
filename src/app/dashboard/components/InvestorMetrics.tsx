@@ -1,72 +1,8 @@
+"use client";
+
+import { useLanguage } from "@/context/LanguageContext";
+
 type MetricTone = "success" | "error";
-
-const userMetrics: {
-  label: string;
-  value: string;
-  change: string;
-  tone?: MetricTone;
-}[] = [
-  {
-    label: "Total User",
-    value: "12.486",
-    change: "+14.2% YoY",
-  },
-  {
-    label: "Smart Hotel",
-    value: "3.248",
-    change: "26% dari total",
-  },
-  {
-    label: "Smart Home",
-    value: "9.238",
-    change: "74% dari total",
-  },
-  {
-    label: "Pelanggan Baru",
-    value: "1.842",
-    change: "+18.6% YoY",
-    tone: "success",
-  },
-  {
-    label: "Pelanggan Berhenti",
-    value: "312",
-    change: "Churn 2.5%",
-    tone: "error",
-  },
-];
-
-const financeMetrics = [
-  {
-    label: "Total Revenue",
-    value: "Rp 4,82 M",
-    change: "+42.6% YoY",
-  },
-  {
-    label: "Keuntungan Bersih",
-    value: "Rp 2,85 M",
-    change: "+73.8% YoY",
-  },
-  {
-    label: "Revenue Hotel",
-    value: "Rp 2,65 M",
-    change: "55% dari total",
-  },
-  {
-    label: "Revenue Home",
-    value: "Rp 2,17 M",
-    change: "45% dari total",
-  },
-  {
-    label: "MRR",
-    value: "Rp 402 jt",
-    change: "+12.4% MoM",
-  },
-  {
-    label: "Profit Margin",
-    value: "59%",
-    change: "+8.2 pts",
-  },
-];
 
 function MetricGrid({
   items,
@@ -109,6 +45,76 @@ function MetricGrid({
 }
 
 export default function InvestorMetrics() {
+  const { t } = useLanguage();
+
+  const userMetrics: {
+    label: string;
+    value: string;
+    change: string;
+    tone?: MetricTone;
+  }[] = [
+    {
+      label: t("dashboard.totalUser"),
+      value: "12.486",
+      change: `+14.2% ${t("dashboard.yoy")}`,
+    },
+    {
+      label: t("dashboard.smartHotel"),
+      value: "3.248",
+      change: `26% ${t("dashboard.percentOfTotal")}`,
+    },
+    {
+      label: t("dashboard.smartHome"),
+      value: "9.238",
+      change: `74% ${t("dashboard.percentOfTotal")}`,
+    },
+    {
+      label: t("dashboard.newCustomers"),
+      value: "1.842",
+      change: `+18.6% ${t("dashboard.yoy")}`,
+      tone: "success",
+    },
+    {
+      label: t("dashboard.churnedCustomers"),
+      value: "312",
+      change: `${t("dashboard.churn")} 2.5%`,
+      tone: "error",
+    },
+  ];
+
+  const financeMetrics = [
+    {
+      label: t("dashboard.totalRevenue"),
+      value: "Rp 4,82 M",
+      change: `+42.6% ${t("dashboard.yoy")}`,
+    },
+    {
+      label: t("dashboard.netProfit"),
+      value: "Rp 2,85 M",
+      change: `+73.8% ${t("dashboard.yoy")}`,
+    },
+    {
+      label: t("dashboard.revenueHotel"),
+      value: "Rp 2,65 M",
+      change: `55% ${t("dashboard.percentOfTotal")}`,
+    },
+    {
+      label: t("dashboard.revenueHome"),
+      value: "Rp 2,17 M",
+      change: `45% ${t("dashboard.percentOfTotal")}`,
+    },
+    {
+      label: t("dashboard.mrr"),
+      value: "Rp 402 jt",
+      change: `+12.4% ${t("dashboard.mom")}`,
+    },
+    {
+      label: t("dashboard.profitMargin"),
+      value: "59%",
+      change: `+8.2 ${t("dashboard.pts")}`,
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <MetricGrid items={userMetrics} columns="xl:grid-cols-5" />

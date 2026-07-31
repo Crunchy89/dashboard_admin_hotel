@@ -1,3 +1,5 @@
+"use client";
+
 import Badge from "@/components/ui/badge/Badge";
 import {
   Table,
@@ -6,101 +8,119 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useLanguage } from "@/context/LanguageContext";
+
+type PackageStatus = "active" | "draft";
+type Segment = "smartHotel" | "smartHome";
 
 interface PackageRow {
   id: string;
   name: string;
-  segment: "Smart Hotel" | "Smart Home";
+  segment: Segment;
   limit: string;
   price: string;
   subscribers: number;
-  status: "Aktif" | "Draft";
+  status: PackageStatus;
 }
 
 const packages: PackageRow[] = [
   {
     id: "PKG-H-S",
     name: "Small",
-    segment: "Smart Hotel",
-    limit: "< 100 kamar",
-    price: "Rp 2.5 jt / bln",
+    segment: "smartHotel",
+    limit: "< 100 rooms",
+    price: "Rp 2.5 jt / mo",
     subscribers: 1480,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-H-M",
     name: "Medium",
-    segment: "Smart Hotel",
-    limit: "100 – 300 kamar",
-    price: "Rp 6.5 jt / bln",
+    segment: "smartHotel",
+    limit: "100 – 300 rooms",
+    price: "Rp 6.5 jt / mo",
     subscribers: 980,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-H-L",
     name: "Large",
-    segment: "Smart Hotel",
-    limit: "301 – 500 kamar",
-    price: "Rp 12 jt / bln",
+    segment: "smartHotel",
+    limit: "301 – 500 rooms",
+    price: "Rp 12 jt / mo",
     subscribers: 520,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-H-E",
     name: "Enterprise",
-    segment: "Smart Hotel",
-    limit: "> 500 kamar",
+    segment: "smartHotel",
+    limit: "> 500 rooms",
     price: "Custom",
     subscribers: 268,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-HM-B",
     name: "Basic",
-    segment: "Smart Home",
+    segment: "smartHome",
     limit: "1 unit",
-    price: "Rp 99 rb / bln",
+    price: "Rp 99 rb / mo",
     subscribers: 4120,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-HM-S",
     name: "Standard",
-    segment: "Smart Home",
+    segment: "smartHome",
     limit: "1 unit",
-    price: "Rp 199 rb / bln",
+    price: "Rp 199 rb / mo",
     subscribers: 3180,
-    status: "Aktif",
+    status: "active",
   },
   {
     id: "PKG-HM-P",
     name: "Premium",
-    segment: "Smart Home",
+    segment: "smartHome",
     limit: "1 unit",
-    price: "Rp 350 rb / bln",
+    price: "Rp 350 rb / mo",
     subscribers: 1938,
-    status: "Draft",
+    status: "draft",
   },
 ];
 
+const statusColor: Record<PackageStatus, "success" | "warning"> = {
+  active: "success",
+  draft: "warning",
+};
+
 export default function PackagesTable() {
+  const { t, locale } = useLanguage();
+
+  const tableHeadings = [
+    t("common.package"),
+    t("common.segment"),
+    t("user.limit"),
+    t("user.price"),
+    t("user.subscribers"),
+    t("common.status"),
+  ];
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-gray-800">
             <TableRow>
-              {["Paket", "Segmen", "Batas", "Harga", "Subscriber", "Status"].map(
-                (h) => (
-                  <TableCell
-                    key={h}
-                    isHeader
-                    className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
-                  >
-                    {h}
-                  </TableCell>
-                )
-              )}
+              {tableHeadings.map((heading) => (
+                <TableCell
+                  key={heading}
+                  isHeader
+                  className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
+                >
+                  {heading}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -113,7 +133,7 @@ export default function PackagesTable() {
                   <p className="text-theme-xs text-gray-400">{pkg.id}</p>
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                  {pkg.segment}
+                  {t(`segments.${pkg.segment}`)}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
                   {pkg.limit}
@@ -122,14 +142,11 @@ export default function PackagesTable() {
                   {pkg.price}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-800 dark:text-white/90">
-                  {pkg.subscribers.toLocaleString("id-ID")}
+                  {pkg.subscribers.toLocaleString(locale === "id" ? "id-ID" : "en-US")}
                 </TableCell>
                 <TableCell className="px-5 py-4">
-                  <Badge
-                    size="sm"
-                    color={pkg.status === "Aktif" ? "success" : "warning"}
-                  >
-                    {pkg.status}
+                  <Badge size="sm" color={statusColor[pkg.status]}>
+                    {t(`status.${pkg.status}`)}
                   </Badge>
                 </TableCell>
               </TableRow>

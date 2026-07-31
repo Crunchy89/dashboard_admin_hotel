@@ -3,8 +3,14 @@ import type { ComponentProps } from "react";
 type IconProps = ComponentProps<"img">;
 
 const createIcon = (name: string) => {
-  const Icon = ({ alt = "", ...props }: IconProps) => (
-    <img src={`/icons/${name}.svg`} alt={alt} aria-hidden={alt ? undefined : true} {...props} />
+  const Icon = ({ alt = "", className = "", ...props }: IconProps) => (
+    <img
+      src={`/icons/${name}.svg`}
+      alt={alt}
+      aria-hidden={alt ? undefined : true}
+      className={`transition-[filter,opacity] duration-200 dark:brightness-0 dark:invert dark:opacity-90 group-[&.menu-item-active]:opacity-100 group-[&.menu-item-active]:[filter:brightness(0)_saturate(100%)_invert(36%)_sepia(90%)_saturate(1200%)_hue-rotate(213deg)_brightness(98%)_contrast(98%)] ${className}`}
+      {...props}
+    />
   );
 
   Icon.displayName = `${name}Icon`;

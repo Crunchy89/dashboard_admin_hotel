@@ -1,3 +1,5 @@
+"use client";
+
 import Badge from "@/components/ui/badge/Badge";
 import {
   Table,
@@ -6,6 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useLanguage } from "@/context/LanguageContext";
+
+type DeviceStatus = "online" | "offline" | "error";
 
 interface DeviceRow {
   id: string;
@@ -14,7 +19,7 @@ interface DeviceRow {
   property: string;
   room: string;
   firmware: string;
-  status: "Online" | "Offline" | "Error";
+  status: DeviceStatus;
 }
 
 const devices: DeviceRow[] = [
@@ -25,7 +30,7 @@ const devices: DeviceRow[] = [
     property: "Grand Horizon Hotel",
     room: "101",
     firmware: "v2.4.1",
-    status: "Online",
+    status: "online",
   },
   {
     id: "DEV-1002",
@@ -34,7 +39,7 @@ const devices: DeviceRow[] = [
     property: "Grand Horizon Hotel",
     room: "205",
     firmware: "v1.8.0",
-    status: "Online",
+    status: "online",
   },
   {
     id: "DEV-2044",
@@ -43,7 +48,7 @@ const devices: DeviceRow[] = [
     property: "Oceanview Suites",
     room: "312",
     firmware: "v3.1.2",
-    status: "Error",
+    status: "error",
   },
   {
     id: "DEV-3102",
@@ -52,7 +57,7 @@ const devices: DeviceRow[] = [
     property: "Villa Melati",
     room: "Main Unit",
     firmware: "v2.0.5",
-    status: "Online",
+    status: "online",
   },
   {
     id: "DEV-3108",
@@ -61,7 +66,7 @@ const devices: DeviceRow[] = [
     property: "Rumah Aruna",
     room: "Main Unit",
     firmware: "v4.2.0",
-    status: "Offline",
+    status: "offline",
   },
   {
     id: "DEV-4501",
@@ -70,38 +75,42 @@ const devices: DeviceRow[] = [
     property: "Palm Garden Resort",
     room: "Lobby",
     firmware: "v5.0.1",
-    status: "Online",
+    status: "online",
   },
 ];
 
 const statusColor: Record<DeviceRow["status"], "success" | "error" | "warning"> =
   {
-    Online: "success",
-    Offline: "error",
-    Error: "warning",
+    online: "success",
+    offline: "error",
+    error: "warning",
   };
 
 export default function DevicesTable() {
+  const { t } = useLanguage();
+
+  const tableHeadings = [
+    t("common.device"),
+    t("user.type"),
+    t("user.property"),
+    t("common.room"),
+    t("common.firmware"),
+    t("common.status"),
+  ];
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="overflow-x-auto">
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-gray-800">
             <TableRow>
-              {[
-                "Device",
-                "Tipe",
-                "Properti",
-                "Room",
-                "Firmware",
-                "Status",
-              ].map((h) => (
+              {tableHeadings.map((heading) => (
                 <TableCell
-                  key={h}
+                  key={heading}
                   isHeader
                   className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
                 >
-                  {h}
+                  {heading}
                 </TableCell>
               ))}
             </TableRow>
@@ -129,7 +138,7 @@ export default function DevicesTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[device.status]}>
-                    {device.status}
+                    {t(`status.${device.status}`)}
                   </Badge>
                 </TableCell>
               </TableRow>

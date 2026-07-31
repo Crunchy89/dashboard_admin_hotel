@@ -1,50 +1,74 @@
+"use client";
+
 import Badge from "@/components/ui/badge/Badge";
+import { useLanguage } from "@/context/LanguageContext";
+
+type MaintenanceStatus = "scheduled" | "inProgress" | "completed";
 
 const upcoming = [
   {
     hotel: "Grand Horizon",
     room: "101",
     device: "Smart Lock A1",
-    when: "Hari ini · 09:00",
-    status: "Terjadwal" as const,
+    whenType: "today" as const,
+    time: "09:00",
+    status: "scheduled" as MaintenanceStatus,
   },
   {
     hotel: "Oceanview",
     room: "312",
     device: "Motion Sensor",
-    when: "Besok · 10:00",
-    status: "Terjadwal" as const,
+    whenType: "tomorrow" as const,
+    time: "10:00",
+    status: "scheduled" as MaintenanceStatus,
   },
   {
     hotel: "Palm Garden",
     room: "518",
     device: "Gateway Hub",
-    when: "5 Agu · 15:00",
-    status: "Terjadwal" as const,
+    whenType: "date" as const,
+    day: "5",
+    monthKey: "aug" as const,
+    time: "15:00",
+    status: "scheduled" as MaintenanceStatus,
   },
 ];
 
-const stats = [
-  { label: "Terjadwal", value: "5", color: "text-brand-500" },
-  { label: "Berjalan", value: "1", color: "text-warning-500" },
-  { label: "Selesai", value: "1", color: "text-success-600" },
+const stats: { status: MaintenanceStatus; value: string; color: string }[] = [
+  { status: "scheduled", value: "5", color: "text-brand-500" },
+  { status: "inProgress", value: "1", color: "text-warning-500" },
+  { status: "completed", value: "1", color: "text-success-600" },
 ];
 
 export default function MaintenanceRightPanel() {
+  const { t } = useLanguage();
+
+  function formatWhen(item: (typeof upcoming)[number]) {
+    if (item.whenType === "today") {
+      return `${t("maintenance.today")} · ${item.time}`;
+    }
+    if (item.whenType === "tomorrow") {
+      return `${t("maintenance.tomorrow")} · ${item.time}`;
+    }
+    return `${item.day} ${t(`months.${item.monthKey}`)} · ${item.time}`;
+  }
+
   return (
     <div className="space-y-4 xl:sticky xl:top-24">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Ringkasan
+          {t("maintenance.summary")}
         </h3>
         <div className="mt-4 grid grid-cols-3 gap-2">
           {stats.map((item) => (
             <div
-              key={item.label}
+              key={item.status}
               className="rounded-xl bg-gray-50 px-2 py-3 text-center dark:bg-white/[0.02]"
             >
               <p className={`text-xl font-bold ${item.color}`}>{item.value}</p>
-              <p className="mt-1 text-xs text-gray-400">{item.label}</p>
+              <p className="mt-1 text-xs text-gray-400">
+                {t(`status.${item.status}`)}
+              </p>
             </div>
           ))}
         </div>
@@ -52,7 +76,7 @@ export default function MaintenanceRightPanel() {
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Segera Dilakukan
+          {t("maintenance.upcoming")}
         </h3>
         <div className="mt-4 space-y-3">
           {upcoming.map((item) => (
@@ -66,14 +90,14 @@ export default function MaintenanceRightPanel() {
                     {item.device}
                   </p>
                   <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                    {item.hotel} · Room {item.room}
+                    {item.hotel} · {t("common.room")} {item.room}
                   </p>
                 </div>
                 <Badge size="sm" color="primary">
-                  {item.status}
+                  {t(`status.${item.status}`)}
                 </Badge>
               </div>
-              <p className="mt-2 text-xs text-gray-400">{item.when}</p>
+              <p className="mt-2 text-xs text-gray-400">{formatWhen(item)}</p>
             </div>
           ))}
         </div>

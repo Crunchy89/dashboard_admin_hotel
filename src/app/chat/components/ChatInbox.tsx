@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ChatThread {
   id: string;
@@ -47,7 +48,7 @@ const chatThreads: ChatThread[] = [
     user: "Grand Horizon Hotel",
     preview: "Minta jadwal teknisi untuk lantai 2",
     unread: 0,
-    time: "Kemarin",
+    time: "yesterday",
     isNew: false,
   },
 ];
@@ -100,24 +101,30 @@ const initialMessages: Record<string, ChatMessage[]> = {
       id: "m1",
       from: "user",
       text: "Minta jadwal teknisi untuk lantai 2.",
-      time: "Kemarin",
+      time: "yesterday",
     },
     {
       id: "m2",
       from: "admin",
       text: "Baik, teknisi bisa datang Kamis pukul 10:00.",
-      time: "Kemarin",
+      time: "yesterday",
     },
   ],
 };
 
 export default function ChatInbox() {
+  const { t, locale } = useLanguage();
   const [activeChat, setActiveChat] = useState(chatThreads[0].id);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState(initialMessages);
 
-  const activeThread = chatThreads.find((t) => t.id === activeChat)!;
+  const activeThread = chatThreads.find((thread) => thread.id === activeChat)!;
   const activeMessages = messages[activeChat] || [];
+
+  function formatTime(time: string) {
+    if (time === "yesterday") return t("chat.yesterday");
+    return time;
+  }
 
   function sendMessage() {
     if (!draft.trim()) return;
@@ -125,7 +132,7 @@ export default function ChatInbox() {
       id: crypto.randomUUID(),
       from: "admin",
       text: draft.trim(),
-      time: new Date().toLocaleTimeString("id-ID", {
+      time: new Date().toLocaleTimeString(locale === "id" ? "id-ID" : "en-US", {
         hour: "2-digit",
         minute: "2-digit",
       }),
@@ -140,14 +147,13 @@ export default function ChatInbox() {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="grid h-[calc(100vh-220px)] min-h-[520px] grid-cols-1 lg:grid-cols-[320px_1fr]">
-        {/* Thread list */}
         <div className="border-b border-gray-100 dark:border-gray-800 lg:border-b-0 lg:border-r">
           <div className="border-b border-gray-100 px-4 py-4 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Inbox Chat
+              {t("chat.inboxTitle")}
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              Kelola pertanyaan dari user
+              {t("chat.inboxDesc")}
             </p>
           </div>
           <div className="custom-scrollbar h-[calc(100%-76px)] space-y-2 overflow-y-auto p-3">
@@ -166,7 +172,7 @@ export default function ChatInbox() {
                     {thread.user}
                   </p>
                   <span className="shrink-0 text-[11px] text-gray-400">
-                    {thread.time}
+                    {formatTime(thread.time)}
                   </span>
                 </div>
                 <div className="mt-1 flex items-center justify-between gap-2">
@@ -181,7 +187,7 @@ export default function ChatInbox() {
                 </div>
                 {thread.isNew && (
                   <span className="mt-1 inline-block text-[10px] font-medium text-success-600">
-                    User baru
+                    {t("chat.newUser")}
                   </span>
                 )}
               </button>
@@ -189,7 +195,6 @@ export default function ChatInbox() {
           </div>
         </div>
 
-        {/* Conversation */}
         <div className="flex min-h-0 flex-col">
           <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
             <h4 className="font-semibold text-gray-800 dark:text-white/90">
@@ -197,8 +202,8 @@ export default function ChatInbox() {
             </h4>
             <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
               {activeThread.isNew
-                ? "User baru — balas pertanyaan mereka"
-                : "Percakapan aktif"}
+                ? t("chat.newUserReply")
+                : t("chat.activeConversation")}
             </p>
           </div>
 
@@ -223,7 +228,7 @@ export default function ChatInbox() {
                       msg.from === "admin" ? "text-white/70" : "text-gray-400"
                     }`}
                   >
-                    {msg.time}
+                    {formatTime(msg.time)}
                   </p>
                 </div>
               </div>
@@ -238,14 +243,14 @@ export default function ChatInbox() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") sendMessage();
                 }}
-                placeholder="Tulis balasan untuk user..."
+                placeholder={t("chat.replyPlaceholder")}
                 className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 outline-none focus:border-brand-300 dark:border-gray-700 dark:text-white/90"
               />
               <button
                 onClick={sendMessage}
                 className="h-11 shrink-0 rounded-lg bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600"
               >
-                Kirim
+                {t("chat.send")}
               </button>
             </div>
           </div>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function UsersPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="List User" />
+      <PageBreadcrumb pageTitleKey="nav.listUser" />
       <UsersTable />
     </div>
   );

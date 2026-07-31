@@ -6,13 +6,13 @@ import React from "react";
 
 export const metadata: Metadata = {
   title: "Maintenance | Smart Hotel Admin",
-  description: "Jadwal maintenance hotel, room, dan device",
+  description: "Maintenance schedule by hotel, room, and device",
 };
 
 export default function MaintenancePage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Maintenance" />
+      <PageBreadcrumb pageTitleKey="nav.maintenance" />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 xl:col-span-9">
           <MaintenanceTable />

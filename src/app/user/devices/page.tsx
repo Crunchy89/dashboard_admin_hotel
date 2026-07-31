@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function DevicesPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Device" />
+      <PageBreadcrumb pageTitleKey="nav.devices" />
       <DevicesTable />
     </div>
   );

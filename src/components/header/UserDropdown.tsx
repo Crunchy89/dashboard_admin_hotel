@@ -7,8 +7,10 @@ import { Modal } from "../ui/modal";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Button from "../ui/button/Button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function UserDropdown() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
 
@@ -61,7 +63,7 @@ export default function UserDropdown() {
       >
         <div className="px-3 py-2">
           <span className="block text-xs text-gray-500 dark:text-gray-400">
-            Username
+            {t("header.username")}
           </span>
           <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
             admin
@@ -74,7 +76,7 @@ export default function UserDropdown() {
               onItemClick={openChangePassword}
               className="flex w-full items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              Change password
+              {t("header.changePassword")}
             </DropdownItem>
           </li>
         </ul>
@@ -83,7 +85,7 @@ export default function UserDropdown() {
           href="/signin"
           className="flex items-center gap-3 px-3 py-2 mt-1 font-medium text-error-600 rounded-lg group text-theme-sm hover:bg-error-50 dark:text-error-500 dark:hover:bg-white/5"
         >
-          Logout
+          {t("header.logout")}
         </Link>
       </Dropdown>
 
@@ -93,22 +95,22 @@ export default function UserDropdown() {
         className="max-w-[480px] p-6"
       >
         <h4 className="mb-1 text-lg font-semibold text-gray-800 dark:text-white/90">
-          Change Password
+          {t("header.changePassword")}
         </h4>
         <p className="mb-5 text-sm text-gray-500 dark:text-gray-400">
-          Masukkan password lama dan password baru Anda.
+          {t("header.changePasswordDesc")}
         </p>
         <div className="space-y-4">
           <div>
-            <Label>Password lama</Label>
+            <Label>{t("header.oldPassword")}</Label>
             <Input type="password" placeholder="••••••••" />
           </div>
           <div>
-            <Label>Password baru</Label>
+            <Label>{t("header.newPassword")}</Label>
             <Input type="password" placeholder="••••••••" />
           </div>
           <div>
-            <Label>Konfirmasi password baru</Label>
+            <Label>{t("header.confirmPassword")}</Label>
             <Input type="password" placeholder="••••••••" />
           </div>
         </div>
@@ -118,10 +120,10 @@ export default function UserDropdown() {
             variant="outline"
             onClick={() => setIsPasswordOpen(false)}
           >
-            Batal
+            {t("common.cancel")}
           </Button>
           <Button size="sm" onClick={() => setIsPasswordOpen(false)}>
-            Simpan
+            {t("common.save")}
           </Button>
         </div>
       </Modal>

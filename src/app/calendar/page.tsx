@@ -4,15 +4,14 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Setup Tanggal Pemasangan | Smart Hotel Admin",
-  description:
-    "Atur tanggal pemasangan perangkat dan aplikasi smart hotel",
+  title: "Installation | Smart Hotel Admin",
+  description: "Set device and application installation date range per hotel",
 };
 
 export default function page() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Setup Tanggal Pemasangan" />
+      <PageBreadcrumb pageTitleKey="nav.installation" />
       <InstallationSetup />
     </div>
   );

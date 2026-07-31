@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function LaporanPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Laporan" />
+      <PageBreadcrumb pageTitleKey="nav.reports" />
       <ReportsTable />
     </div>
   );
