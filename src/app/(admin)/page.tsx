@@ -1,41 +1,59 @@
 import type { Metadata } from "next";
-import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
-import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
-import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
-import StatisticsChart from "@/components/ecommerce/StatisticsChart";
-import RecentOrders from "@/components/ecommerce/RecentOrders";
-import DemographicCard from "@/components/ecommerce/DemographicCard";
+import SubscriptionMetrics from "@/components/subscription/SubscriptionMetrics";
+import SubscriptionGrowthChart from "@/components/subscription/SubscriptionGrowthChart";
+import MonthlySubscriptionChart from "@/components/subscription/MonthlySubscriptionChart";
+import UserDistributionChart from "@/components/subscription/UserDistributionChart";
+import HotelPackages from "@/components/subscription/HotelPackages";
+import HomePackages from "@/components/subscription/HomePackages";
+import RecentSubscriptions from "@/components/subscription/RecentSubscriptions";
 
 export const metadata: Metadata = {
-  title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
+  title: "Dashboard Subscription | Smart Hotel & Smart Home",
+  description:
+    "Dashboard admin untuk sistem subscription Smart Hotel dan Smart Home",
 };
 
-export default function Ecommerce() {
+export default function SubscriptionDashboard() {
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
-      <div className="col-span-12 space-y-6 xl:col-span-7">
-        <EcommerceMetrics />
-
-        <MonthlySalesChart />
-      </div>
-
-      <div className="col-span-12 xl:col-span-5">
-        <MonthlyTarget />
+      <div className="col-span-12">
+        <div className="mb-2">
+          <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90 md:text-2xl">
+            Dashboard Subscription
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Overview pertumbuhan langganan Smart Hotel & Smart Home
+          </p>
+        </div>
       </div>
 
       <div className="col-span-12">
-        <StatisticsChart />
+        <SubscriptionMetrics />
       </div>
 
-      <div className="col-span-12 xl:col-span-5">
-        <DemographicCard />
+      <div className="col-span-12 xl:col-span-8">
+        <SubscriptionGrowthChart />
+      </div>
+
+      <div className="col-span-12 xl:col-span-4">
+        <UserDistributionChart />
       </div>
 
       <div className="col-span-12 xl:col-span-7">
-        <RecentOrders />
+        <MonthlySubscriptionChart />
+      </div>
+
+      <div className="col-span-12 xl:col-span-5">
+        <HomePackages />
+      </div>
+
+      <div className="col-span-12">
+        <HotelPackages />
+      </div>
+
+      <div className="col-span-12">
+        <RecentSubscriptions />
       </div>
     </div>
   );
