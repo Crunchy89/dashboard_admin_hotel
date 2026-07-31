@@ -27,11 +27,11 @@ export default function SubscriptionDashboard() {
           <RevenueProfitChart />
         </div>
 
-        <div className="col-span-12 xl:col-span-6">
+        <div className="col-span-12 xl:col-span-6 h-full">
           <CustomerMovementChart />
         </div>
 
-        <div className="col-span-12 xl:col-span-6">
+        <div className="col-span-12 xl:col-span-6 h-full">
           <UserDistributionChart />
         </div>
 

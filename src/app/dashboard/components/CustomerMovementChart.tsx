@@ -122,7 +122,7 @@ export default function CustomerMovementChart() {
       : "text-gray-500 dark:text-gray-400";
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
+    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -171,12 +171,14 @@ export default function CustomerMovementChart() {
         </div>
       </div>
 
-      <Chart
-        options={options}
-        series={period === "monthly" ? monthlySeries : yearlySeries}
-        type="bar"
-        height={320}
-      />
+      <div className="mt-auto min-h-0 flex-1">
+        <Chart
+          options={options}
+          series={period === "monthly" ? monthlySeries : yearlySeries}
+          type="bar"
+          height={320}
+        />
+      </div>
     </div>
   );
 }

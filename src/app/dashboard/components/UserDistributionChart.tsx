@@ -75,7 +75,7 @@ export default function UserDistributionChart() {
   );
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
+    <div className="flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           User Distribution
@@ -85,7 +85,7 @@ export default function UserDistributionChart() {
         </p>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex min-h-0 flex-1 items-center justify-center">
         <ReactApexChart
           options={options}
           series={series}
