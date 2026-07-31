@@ -2,7 +2,6 @@
 import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useLanguage } from "@/context/LanguageContext";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -13,8 +12,6 @@ const chartData = {
 };
 
 export default function ProfitBreakdownChart() {
-  const { t } = useLanguage();
-
   const options: ApexOptions = useMemo(
     () => ({
       colors: ["#465FFF", "#9CB9FF", "#12B76A"],
@@ -45,7 +42,7 @@ export default function ProfitBreakdownChart() {
       },
       yaxis: {
         title: {
-          text: t("dashboard.idrBillion"),
+          text: "IDR billion",
           style: { fontSize: "12px", color: "#98A2B3" },
         },
         labels: {
@@ -67,29 +64,29 @@ export default function ProfitBreakdownChart() {
         },
       },
     }),
-    [t]
+    []
   );
 
   const series = useMemo(
     () => [
-      { name: t("dashboard.revenue"), data: chartData.revenue },
+      { name: "Revenue", data: chartData.revenue },
       {
-        name: t("dashboard.operationalCost"),
+        name: "Operational Cost",
         data: chartData.operationalCost,
       },
-      { name: t("dashboard.netProfit"), data: chartData.netProfit },
+      { name: "Net Profit", data: chartData.netProfit },
     ],
-    [t]
+    []
   );
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="mb-5">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {t("dashboard.revenueVsProfit")}
+          Revenue vs Net Profit
         </h3>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          {t("dashboard.revenueCostCompare")}
+          Comparison of revenue, costs, and net profit (IDR billion)
         </p>
       </div>
 

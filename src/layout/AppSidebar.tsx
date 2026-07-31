@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
-import { useLanguage } from "../context/LanguageContext";
 import {
   CalenderIcon,
   ChatIcon,
@@ -20,68 +19,67 @@ import {
 } from "../icon";
 
 type NavItem = {
-  nameKey: string;
+  name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { nameKey: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
-    nameKey: "nav.dashboard",
+    name: "Dashboard",
     path: "/dashboard",
   },
   {
     icon: <CalenderIcon />,
-    nameKey: "nav.installation",
+    name: "Installation",
     path: "/calendar",
   },
   {
     icon: <TaskIcon />,
-    nameKey: "nav.maintenance",
+    name: "Maintenance",
     path: "/maintenance",
   },
   {
     icon: <ListIcon />,
-    nameKey: "nav.reports",
+    name: "Reports",
     path: "/laporan",
   },
   {
     icon: <ChatIcon />,
-    nameKey: "nav.chat",
+    name: "Messages",
     path: "/chat",
   },
   {
     icon: <GroupIcon />,
-    nameKey: "nav.staff",
+    name: "Staff",
     path: "/staff",
   },
   {
     icon: <UserCircleIcon />,
-    nameKey: "nav.user",
+    name: "User",
     subItems: [
-      { nameKey: "nav.listUser", path: "/user", pro: false },
-      { nameKey: "nav.packages", path: "/user/packages", pro: false },
-      { nameKey: "nav.rooms", path: "/user/rooms", pro: false },
-      { nameKey: "nav.devices", path: "/user/devices", pro: false },
+      { name: "List User", path: "/user", pro: false },
+      { name: "Packages", path: "/user/packages", pro: false },
+      { name: "Room", path: "/user/rooms", pro: false },
+      { name: "Device", path: "/user/devices", pro: false },
     ],
   },
   {
     icon: <DollarLineIcon />,
-    nameKey: "nav.finance",
+    name: "Finance",
     path: "/finance",
   },
   {
     icon: <FileIcon />,
-    nameKey: "nav.salary",
+    name: "Salary",
     path: "/salary",
   },
 ];
 
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
-  const { t } = useLanguage();
   const pathname = usePathname();
 
   const renderMenuItems = (
@@ -90,7 +88,7 @@ const AppSidebar: React.FC = () => {
   ) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
-        <li key={nav.nameKey}>
+        <li key={nav.name}>
           {nav.subItems ? (
             <button
               onClick={() => handleSubmenuToggle(index, menuType)}
@@ -114,7 +112,7 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className={`menu-item-text`}>{t(nav.nameKey)}</span>
+                <span className={`menu-item-text`}>{nav.name}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
                 <ChevronDownIcon
@@ -145,7 +143,7 @@ const AppSidebar: React.FC = () => {
                   {nav.icon}
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
-                  <span className={`menu-item-text`}>{t(nav.nameKey)}</span>
+                  <span className={`menu-item-text`}>{nav.name}</span>
                 )}
               </Link>
             )
@@ -165,7 +163,7 @@ const AppSidebar: React.FC = () => {
             >
               <ul className="mt-2 space-y-1 ml-9">
                 {nav.subItems.map((subItem) => (
-                  <li key={subItem.nameKey}>
+                  <li key={subItem.name}>
                     <Link
                       href={subItem.path}
                       className={`menu-dropdown-item ${
@@ -174,7 +172,7 @@ const AppSidebar: React.FC = () => {
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
-                      {t(subItem.nameKey)}
+                      {subItem.name}
                     </Link>
                   </li>
                 ))}
@@ -269,7 +267,7 @@ const AppSidebar: React.FC = () => {
           />
           {(isExpanded || isHovered || isMobileOpen) && (
             <span className="text-xl font-semibold text-gray-800 dark:text-white/90">
-              {t("nav.dashboard")}
+              Dashboard
             </span>
           )}
         </Link>
@@ -286,7 +284,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  t("nav.menu")
+                  "Menu"
                 ) : (
                   <HorizontaLDots />
                 )}

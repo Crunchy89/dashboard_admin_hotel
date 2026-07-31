@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Laporan | Smart Hotel Admin",
-  description: "List laporan user dan progress pengerjaan",
+  title: "Reports | Smart Hotel Admin",
+  description: "User report list and work progress tracking",
 };
 
 export default function LaporanPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.reports" />
+      <PageBreadcrumb pageTitle="Reports" />
       <ReportsTable />
     </div>
   );

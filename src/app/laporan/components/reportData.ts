@@ -19,7 +19,7 @@ export const userReports: UserReport[] = [
     id: "RPT-1042",
     user: "Skyline Business Hotel",
     category: "user",
-    subject: "Smart lock tidak merespons",
+    subject: "Smart lock not responding",
     hotel: "Skyline Business Hotel",
     room: "408",
     device: "Smart Lock B3",
@@ -30,7 +30,7 @@ export const userReports: UserReport[] = [
     id: "RPT-1041",
     user: "Oceanview Suites",
     category: "deviceError",
-    subject: "Sensor gerak error berulang",
+    subject: "Motion sensor recurring error",
     hotel: "Oceanview Suites",
     room: "312",
     device: "Motion Sensor Hall",
@@ -41,7 +41,7 @@ export const userReports: UserReport[] = [
     id: "RPT-1040",
     user: "Rumah Aruna",
     category: "disconnected",
-    subject: "Kamera pintu terputus",
+    subject: "Entrance camera disconnected",
     hotel: "Rumah Aruna",
     room: "Main Unit",
     device: "Camera Entrance",
@@ -52,7 +52,7 @@ export const userReports: UserReport[] = [
     id: "RPT-1039",
     user: "Villa Melati",
     category: "user",
-    subject: "Bantuan setup sensor baru",
+    subject: "Help setting up new sensor",
     hotel: "Villa Melati",
     room: "Main Unit",
     device: "Smart Switch Panel",
@@ -63,7 +63,7 @@ export const userReports: UserReport[] = [
     id: "RPT-1038",
     user: "Grand Horizon Hotel",
     category: "deviceError",
-    subject: "Thermostat tidak sinkron",
+    subject: "Thermostat not syncing",
     hotel: "Grand Horizon Hotel",
     room: "205",
     device: "Thermostat Zone 2",
@@ -100,4 +100,17 @@ export const categoryColorMap: Record<
   user: "primary",
   deviceError: "error",
   disconnected: "warning",
+};
+
+export const categoryLabels: Record<ReportCategory, string> = {
+  user: "User",
+  deviceError: "Device Error",
+  disconnected: "Disconnected",
+};
+
+export const progressLabels: Record<ReportProgress, string> = {
+  new: "New",
+  processing: "Processing",
+  waitingUser: "Waiting for User",
+  done: "Done",
 };

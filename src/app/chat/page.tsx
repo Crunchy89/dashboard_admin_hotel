@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ChatPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.chat" />
+      <PageBreadcrumb pageTitle="Messages" />
       <ChatInbox />
     </div>
   );

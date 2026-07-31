@@ -7,7 +7,6 @@ import Label from "@/components/form/Label";
 import FileInput from "@/components/form/input/FileInput";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
-import { useLanguage } from "@/context/LanguageContext";
 import {
   Table,
   TableBody,
@@ -36,20 +35,33 @@ interface SalaryRow {
 const CURRENT_YEAR = 2026;
 const CURRENT_MONTH = 7;
 
-const monthKeys = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
+const monthLabels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ] as const;
+
+const roleLabels: Record<StaffRole, string> = {
+  technician: "Technician",
+  programmer: "Programmer",
+  hr: "HR",
+  admin: "Admin",
+  manager: "Manager",
+};
+
+const statusLabels: Record<PaymentStatus, string> = {
+  paidThisMonth: "Paid This Month",
+  unpaidThisMonth: "Unpaid This Month",
+};
 
 const initialRows: SalaryRow[] = [
   {
@@ -126,14 +138,14 @@ function formatRupiah(amount: number) {
   }).format(amount);
 }
 
-function formatPeriodLabel(t: (key: string) => string, year: number, month: number) {
-  const monthLabel = t(`months.${monthKeys[month - 1]}`);
+function formatPeriodLabel(year: number, month: number) {
+  const monthLabel = monthLabels[month - 1];
   return `${monthLabel} ${year}`;
 }
 
-function formatDateLabel(isoDate: string, t: (key: string) => string) {
+function formatDateLabel(isoDate: string) {
   const [year, month, day] = isoDate.split("-");
-  const monthLabel = t(`months.${monthKeys[Number(month) - 1]}`);
+  const monthLabel = monthLabels[Number(month) - 1];
   return `${day} ${monthLabel} ${year}`;
 }
 
@@ -146,7 +158,6 @@ function formatTodayIso() {
 }
 
 export default function SalaryTable() {
-  const { t } = useLanguage();
   const { isOpen, openModal, closeModal } = useModal();
   const [rows, setRows] = useState(initialRows);
   const [selectedRow, setSelectedRow] = useState<SalaryRow | null>(null);
@@ -154,8 +165,8 @@ export default function SalaryTable() {
   const [formError, setFormError] = useState("");
 
   const periodLabel = useMemo(
-    () => formatPeriodLabel(t, CURRENT_YEAR, CURRENT_MONTH),
-    [t]
+    () => formatPeriodLabel(CURRENT_YEAR, CURRENT_MONTH),
+    []
   );
 
   const paidCount = rows.filter((row) => row.status === "paidThisMonth").length;
@@ -166,12 +177,12 @@ export default function SalaryTable() {
     .reduce((sum, row) => sum + row.salary, 0);
 
   const tableHeaders = [
-    t("salary.employee"),
-    t("common.role"),
-    t("salary.salary"),
-    t("salary.bankAccount"),
-    t("common.status"),
-    t("common.action"),
+    "Employee",
+    "Role",
+    "Salary",
+    "Bank Account",
+    "Status",
+    "Action",
   ];
 
   function handleOpenPayModal(row: SalaryRow) {
@@ -192,7 +203,7 @@ export default function SalaryTable() {
     if (!selectedRow) return;
 
     if (!proofFile) {
-      setFormError(t("salary.uploadRequired"));
+      setFormError("Please upload salary transfer proof first.");
       return;
     }
 
@@ -216,17 +227,17 @@ export default function SalaryTable() {
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {[
           {
-            label: t("salary.period"),
+            label: "Period",
             value: periodLabel,
-            sub: t("salary.internalSalaries"),
+            sub: "Internal employee salaries",
           },
           {
-            label: t("salary.paid"),
+            label: "Paid",
             value: `${paidCount} / ${rows.length}`,
             sub: formatRupiah(paidSalary),
           },
           {
-            label: t("salary.unpaid"),
+            label: "Unpaid",
             value: String(unpaidCount),
             sub: formatRupiah(totalSalary - paidSalary),
           },
@@ -247,10 +258,10 @@ export default function SalaryTable() {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("salary.title")}
+            Internal Employee Salaries
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t("salary.description")} {periodLabel}
+            Salary payment status for {periodLabel}
           </p>
         </div>
 
@@ -279,7 +290,7 @@ export default function SalaryTable() {
                     <p className="text-theme-xs text-gray-400">{row.staffId}</p>
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                    {t(`roles.${row.role}`)}
+                    {roleLabels[row.role]}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm font-medium text-gray-800 dark:text-white/90">
                     {formatRupiah(row.salary)}
@@ -289,23 +300,23 @@ export default function SalaryTable() {
                       {row.bankName} · {row.bankAccount}
                     </p>
                     <p className="text-theme-xs text-gray-400">
-                      {t("salary.accountHolderPrefix")} {row.accountHolder}
+                      a/n {row.accountHolder}
                     </p>
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <Badge size="sm" color={statusColor[row.status]}>
-                      {t(`status.${row.status}`)}
+                      {statusLabels[row.status]}
                     </Badge>
                     {row.status === "paidThisMonth" && row.paidAt && (
                       <p className="mt-1 text-theme-xs text-gray-400">
-                        {formatDateLabel(row.paidAt, t)}
+                        {formatDateLabel(row.paidAt)}
                       </p>
                     )}
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     {row.status === "unpaidThisMonth" ? (
                       <Button size="sm" onClick={() => handleOpenPayModal(row)}>
-                        {t("salary.pay")}
+                        Pay
                       </Button>
                     ) : (
                       <p className="text-theme-xs text-gray-400">
@@ -333,10 +344,11 @@ export default function SalaryTable() {
             }}
           >
             <h4 className="mb-2 text-lg font-medium text-gray-800 dark:text-white/90">
-              {t("salary.payModalTitle")}
+              Pay Employee Salary
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-              {t("salary.payModalDesc")} {periodLabel}
+              Upload salary transfer proof to the employee bank account for period{" "}
+              {periodLabel}
             </p>
 
             <div className="space-y-4 rounded-xl border border-gray-100 bg-gray-50 p-4 dark:border-gray-800 dark:bg-white/[0.02]">
@@ -346,7 +358,7 @@ export default function SalaryTable() {
                     {selectedRow.name}
                   </p>
                   <p className="text-xs text-gray-400">
-                    {selectedRow.staffId} · {t(`roles.${selectedRow.role}`)}
+                    {selectedRow.staffId} · {roleLabels[selectedRow.role]}
                   </p>
                 </div>
                 <p className="text-sm font-semibold text-brand-500">
@@ -354,27 +366,27 @@ export default function SalaryTable() {
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-400">
-                  {t("salary.destinationAccount")}
-                </p>
+                <p className="text-xs text-gray-400">Destination account</p>
                 <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                   {selectedRow.bankName} · {selectedRow.bankAccount}
                 </p>
                 <p className="text-xs text-gray-400">
-                  {t("salary.accountHolderPrefix")} {selectedRow.accountHolder}
+                  a/n {selectedRow.accountHolder}
                 </p>
               </div>
             </div>
 
             <div className="mt-5">
-              <Label>{t("salary.transferProof")}</Label>
+              <Label>Transfer Proof</Label>
               <FileInput
                 onChange={(e) => {
                   setProofFile(e.target.files?.[0] ?? null);
                   setFormError("");
                 }}
               />
-              <p className="mt-2 text-xs text-gray-400">{t("salary.fileHint")}</p>
+              <p className="mt-2 text-xs text-gray-400">
+                Format: PDF, JPG, or PNG
+              </p>
             </div>
 
             {formError && (
@@ -388,10 +400,10 @@ export default function SalaryTable() {
                 type="button"
                 onClick={handleCloseModal}
               >
-                {t("common.cancel")}
+                Cancel
               </Button>
               <Button size="sm" type="submit">
-                {t("salary.confirmPayment")}
+                Confirm Payment
               </Button>
             </div>
           </form>

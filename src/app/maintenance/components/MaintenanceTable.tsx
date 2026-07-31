@@ -7,7 +7,6 @@ import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
-import { useLanguage } from "@/context/LanguageContext";
 import {
   Table,
   TableBody,
@@ -128,6 +127,12 @@ const deviceTypeOptions = [
   { value: "Camera", label: "Camera" },
 ];
 
+const statusLabels: Record<MaintenanceStatus, string> = {
+  scheduled: "Scheduled",
+  inProgress: "In Progress",
+  completed: "Completed",
+};
+
 const statusColor: Record<MaintenanceStatus, "primary" | "warning" | "success"> =
   {
     scheduled: "primary",
@@ -135,24 +140,24 @@ const statusColor: Record<MaintenanceStatus, "primary" | "warning" | "success"> 
     completed: "success",
   };
 
-const monthKeys = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
+const monthLabels = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ] as const;
 
-function formatScheduleDate(isoDate: string, t: (key: string) => string) {
+function formatScheduleDate(isoDate: string) {
   const [year, month, day] = isoDate.split("-");
-  const monthLabel = t(`months.${monthKeys[Number(month) - 1]}`);
+  const monthLabel = monthLabels[Number(month) - 1];
   return `${day} ${monthLabel} ${year}`;
 }
 
@@ -168,7 +173,6 @@ const inputClassName =
   "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:focus:border-brand-800";
 
 export default function MaintenanceTable() {
-  const { t } = useLanguage();
   const { isOpen, openModal, closeModal } = useModal();
   const [rows, setRows] = useState(initialRows);
   const [formKey, setFormKey] = useState(0);
@@ -183,12 +187,12 @@ export default function MaintenanceTable() {
 
   const tableHeaders = [
     "ID",
-    t("common.hotel"),
-    t("common.room"),
-    t("common.device"),
-    t("maintenance.schedule"),
-    t("maintenance.technician"),
-    t("common.status"),
+    "Hotel",
+    "Room",
+    "Device",
+    "Schedule",
+    "Technician",
+    "Status",
   ];
 
   function resetForm() {
@@ -223,7 +227,7 @@ export default function MaintenanceTable() {
       !time ||
       !technician
     ) {
-      setFormError(t("common.fillAllFields"));
+      setFormError("Please complete all fields before saving.");
       return;
     }
 
@@ -249,14 +253,14 @@ export default function MaintenanceTable() {
         <div className="flex flex-col gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              {t("maintenance.title")}
+              Maintenance Schedule
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {t("maintenance.description")}
+              Maintenance list by hotel, room, and device
             </p>
           </div>
           <Button size="sm" onClick={handleOpenModal}>
-            {t("maintenance.addSchedule")}
+            Add Schedule
           </Button>
         </div>
 
@@ -294,14 +298,14 @@ export default function MaintenanceTable() {
                     <p className="text-theme-xs text-gray-400">{row.deviceType}</p>
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                    {formatScheduleDate(row.scheduleDate, t)} · {row.time}
+                    {formatScheduleDate(row.scheduleDate)} · {row.time}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
                     {row.technician}
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <Badge size="sm" color={statusColor[row.status]}>
-                      {t(`status.${row.status}`)}
+                      {statusLabels[row.status]}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -323,61 +327,61 @@ export default function MaintenanceTable() {
           }}
         >
           <h4 className="mb-2 text-lg font-medium text-gray-800 dark:text-white/90">
-            {t("maintenance.addModalTitle")}
+            Add Maintenance Schedule
           </h4>
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-            {t("maintenance.addModalDesc")}
+            Fill in maintenance details to add a new schedule
           </p>
 
           <div key={formKey} className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <Label>{t("common.hotel")}</Label>
+              <Label>Hotel</Label>
               <Select
                 options={hotelOptions}
-                placeholder={t("common.selectHotel")}
+                placeholder="Select hotel"
                 onChange={setHotel}
               />
             </div>
             <div>
-              <Label>{t("common.room")}</Label>
+              <Label>Room</Label>
               <input
                 type="text"
                 value={room}
                 onChange={(e) => setRoom(e.target.value)}
-                placeholder={t("maintenance.roomPlaceholder")}
+                placeholder="e.g. 101"
                 className={inputClassName}
               />
             </div>
             <div>
-              <Label>{t("common.device")}</Label>
+              <Label>Device</Label>
               <input
                 type="text"
                 value={device}
                 onChange={(e) => setDevice(e.target.value)}
-                placeholder={t("maintenance.devicePlaceholder")}
+                placeholder="e.g. Smart Lock A1"
                 className={inputClassName}
               />
             </div>
             <div>
-              <Label>{t("maintenance.deviceType")}</Label>
+              <Label>Device type</Label>
               <Select
                 options={deviceTypeOptions}
-                placeholder={t("common.selectType")}
+                placeholder="Select type"
                 onChange={setDeviceType}
               />
             </div>
             <div>
-              <Label>{t("maintenance.technician")}</Label>
+              <Label>Technician</Label>
               <input
                 type="text"
                 value={technician}
                 onChange={(e) => setTechnician(e.target.value)}
-                placeholder={t("maintenance.technicianPlaceholder")}
+                placeholder="Technician name"
                 className={inputClassName}
               />
             </div>
             <div>
-              <Label>{t("maintenance.date")}</Label>
+              <Label>Date</Label>
               <input
                 type="date"
                 value={scheduleDate}
@@ -386,7 +390,7 @@ export default function MaintenanceTable() {
               />
             </div>
             <div>
-              <Label>{t("maintenance.time")}</Label>
+              <Label>Time</Label>
               <input
                 type="time"
                 value={time}
@@ -407,10 +411,10 @@ export default function MaintenanceTable() {
               type="button"
               onClick={handleCloseModal}
             >
-              {t("common.cancel")}
+              Cancel
             </Button>
             <Button size="sm" type="submit">
-              {t("maintenance.saveSchedule")}
+              Save Schedule
             </Button>
           </div>
         </form>

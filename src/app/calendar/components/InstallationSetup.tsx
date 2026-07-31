@@ -4,7 +4,6 @@ import Badge from "@/components/ui/badge/Badge";
 import Button from "@/components/ui/button/Button";
 import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
-import { useLanguage } from "@/context/LanguageContext";
 
 type InstallType = "device" | "app" | "both";
 type SetupStatus = "draft" | "scheduled" | "inProgress";
@@ -62,10 +61,16 @@ const hotelOptions = [
   { value: "Skyline Business Hotel", label: "Skyline Business Hotel" },
 ];
 
-const installTypeLabelKey: Record<InstallType, string> = {
-  device: "calendar.deviceInstall",
-  app: "calendar.appSetup",
-  both: "calendar.both",
+const installTypeLabels: Record<InstallType, string> = {
+  device: "Device installation",
+  app: "Application setup",
+  both: "Device + Application",
+};
+
+const statusLabels: Record<SetupStatus, string> = {
+  draft: "Draft",
+  scheduled: "Scheduled",
+  inProgress: "In Progress",
 };
 
 const statusColor: Record<SetupStatus, "warning" | "success" | "primary"> = {
@@ -75,7 +80,6 @@ const statusColor: Record<SetupStatus, "warning" | "success" | "primary"> = {
 };
 
 export default function InstallationSetup() {
-  const { t } = useLanguage();
   const [rows, setRows] = useState(initialRows);
   const [formKey, setFormKey] = useState(0);
   const [hotel, setHotel] = useState("");
@@ -86,25 +90,25 @@ export default function InstallationSetup() {
 
   const typeOptions = useMemo(
     () => [
-      { value: "device", label: t("calendar.deviceInstall") },
-      { value: "app", label: t("calendar.appSetup") },
-      { value: "both", label: t("calendar.both") },
+      { value: "device", label: "Device installation" },
+      { value: "app", label: "Application setup" },
+      { value: "both", label: "Device + Application" },
     ],
-    [t]
+    []
   );
 
   const tableHeadings = [
-    t("common.hotel"),
-    t("calendar.package"),
-    t("calendar.type"),
-    t("calendar.start"),
-    t("calendar.end"),
-    t("common.status"),
+    "Hotel",
+    "Package",
+    "Type",
+    "Start",
+    "End",
+    "Status",
   ];
 
   function handleSave() {
     if (!hotel || !type || !startDate || !endDate) {
-      setSavedMessage(t("common.fillAllFields"));
+      setSavedMessage("Please complete all fields before saving.");
       return;
     }
 
@@ -125,12 +129,12 @@ export default function InstallationSetup() {
     setStartDate("");
     setEndDate("");
     setFormKey((k) => k + 1);
-    setSavedMessage(t("calendar.savedSuccess"));
+    setSavedMessage("Installation schedule saved successfully.");
   }
 
   function formatRoomCount(count: number | null) {
     if (count === null) return "-";
-    return `${count} ${t("calendar.roomsCount")}`;
+    return `${count} rooms`;
   }
 
   return (
@@ -138,10 +142,10 @@ export default function InstallationSetup() {
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] sm:p-6">
         <div className="mb-5">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("calendar.title")}
+            Installation
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t("calendar.description")}
+            Set device and application installation date range per hotel
           </p>
         </div>
 
@@ -150,23 +154,23 @@ export default function InstallationSetup() {
           className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
         >
           <div>
-            <Label>{t("common.hotel")}</Label>
+            <Label>Hotel</Label>
             <Select
               options={hotelOptions}
-              placeholder={t("common.selectHotel")}
+              placeholder="Select hotel"
               onChange={(value) => setHotel(value)}
             />
           </div>
           <div>
-            <Label>{t("calendar.installType")}</Label>
+            <Label>Installation type</Label>
             <Select
               options={typeOptions}
-              placeholder={t("calendar.selectInstallType")}
+              placeholder="Select installation type"
               onChange={(value) => setType(value as InstallType)}
             />
           </div>
           <div>
-            <Label>{t("calendar.startDate")}</Label>
+            <Label>Start date</Label>
             <input
               type="date"
               value={startDate}
@@ -175,7 +179,7 @@ export default function InstallationSetup() {
             />
           </div>
           <div>
-            <Label>{t("calendar.endDate")}</Label>
+            <Label>End date</Label>
             <input
               type="date"
               value={endDate}
@@ -187,7 +191,7 @@ export default function InstallationSetup() {
 
         <div className="mt-5 flex flex-wrap items-center gap-3">
           <Button size="sm" onClick={handleSave}>
-            {t("calendar.saveSchedule")}
+            Save Schedule
           </Button>
           {savedMessage && (
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -200,7 +204,7 @@ export default function InstallationSetup() {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="border-b border-gray-200 px-5 py-4 dark:border-gray-800 sm:px-6">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("calendar.scheduleList")}
+            Installation Schedule List
           </h3>
         </div>
 
@@ -236,7 +240,7 @@ export default function InstallationSetup() {
                     {row.packageName}
                   </td>
                   <td className="px-5 py-4 text-sm text-gray-500 dark:text-gray-400 sm:px-6">
-                    {t(installTypeLabelKey[row.type])}
+                    {installTypeLabels[row.type]}
                   </td>
                   <td className="px-5 py-4 text-sm text-gray-500 dark:text-gray-400 sm:px-6">
                     {row.startDate}
@@ -246,7 +250,7 @@ export default function InstallationSetup() {
                   </td>
                   <td className="px-5 py-4 sm:px-6">
                     <Badge size="sm" color={statusColor[row.status]}>
-                      {t(`status.${row.status}`)}
+                      {statusLabels[row.status]}
                     </Badge>
                   </td>
                 </tr>

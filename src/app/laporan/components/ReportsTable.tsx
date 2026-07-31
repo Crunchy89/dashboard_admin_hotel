@@ -8,34 +8,33 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 import {
   categoryColorMap,
+  categoryLabels,
   progressColor,
+  progressLabels,
   userReports,
 } from "./reportData";
 
 export default function ReportsTable() {
-  const { t } = useLanguage();
-
   const tableHeadings = [
-    t("reports.id"),
-    t("reports.userHotel"),
-    t("reports.category"),
-    t("reports.subject"),
-    t("common.device"),
-    t("reports.time"),
-    t("reports.progress"),
+    "ID",
+    "User / Hotel",
+    "Category",
+    "Subject",
+    "Device",
+    "Time",
+    "Progress",
   ];
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {t("reports.listTitle")}
+          User Report List
         </h3>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          {t("reports.listDesc")}
+          Track user report progress
         </p>
       </div>
 
@@ -66,13 +65,13 @@ export default function ReportsTable() {
                   </p>
                   {report.room && (
                     <p className="text-theme-xs text-gray-400">
-                      {t("reports.roomPrefix")} {report.room}
+                      Room {report.room}
                     </p>
                   )}
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={categoryColorMap[report.category]}>
-                    {t(`reports.categories.${report.category}`)}
+                    {categoryLabels[report.category]}
                   </Badge>
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
@@ -86,7 +85,7 @@ export default function ReportsTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={progressColor[report.progress]}>
-                    {t(`status.${report.progress}`)}
+                    {progressLabels[report.progress]}
                   </Badge>
                 </TableCell>
               </TableRow>

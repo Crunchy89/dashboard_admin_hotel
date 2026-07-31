@@ -7,7 +7,6 @@ import Label from "@/components/form/Label";
 import Select from "@/components/form/Select";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
-import { useLanguage } from "@/context/LanguageContext";
 import {
   Table,
   TableBody,
@@ -39,7 +38,7 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-001",
     name: "Andi Pratama",
-    email: "andi.pratama@perusahaan.id",
+    email: "andi.pratama@company.id",
     phone: "0812-3456-7890",
     role: "technician",
     department: "operations",
@@ -48,7 +47,7 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-002",
     name: "Budi Santoso",
-    email: "budi.santoso@perusahaan.id",
+    email: "budi.santoso@company.id",
     phone: "0813-9876-5432",
     role: "programmer",
     department: "engineering",
@@ -57,7 +56,7 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-003",
     name: "Citra Lestari",
-    email: "citra.lestari@perusahaan.id",
+    email: "citra.lestari@company.id",
     phone: "0821-1122-3344",
     role: "hr",
     department: "humanResources",
@@ -66,7 +65,7 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-004",
     name: "Dedi Kurniawan",
-    email: "dedi.kurniawan@perusahaan.id",
+    email: "dedi.kurniawan@company.id",
     phone: "0856-7788-9900",
     role: "manager",
     department: "management",
@@ -75,7 +74,7 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-005",
     name: "Eka Putri",
-    email: "eka.putri@perusahaan.id",
+    email: "eka.putri@company.id",
     phone: "0817-4455-6677",
     role: "admin",
     department: "management",
@@ -84,13 +83,34 @@ const initialRows: StaffRow[] = [
   {
     id: "STF-006",
     name: "Fajar Nugroho",
-    email: "fajar.nugroho@perusahaan.id",
+    email: "fajar.nugroho@company.id",
     phone: "0819-2233-4455",
     role: "technician",
     department: "operations",
     status: "inactive",
   },
 ];
+
+const roleLabels: Record<StaffRole, string> = {
+  technician: "Technician",
+  programmer: "Programmer",
+  hr: "HR",
+  admin: "Admin",
+  manager: "Manager",
+};
+
+const departmentLabels: Record<StaffDepartment, string> = {
+  engineering: "Engineering",
+  humanResources: "Human Resources",
+  operations: "Operations",
+  finance: "Finance",
+  management: "Management",
+};
+
+const statusLabels: Record<StaffStatus, string> = {
+  active: "Active",
+  inactive: "Inactive",
+};
 
 const roleKeys: StaffRole[] = [
   "technician",
@@ -134,7 +154,6 @@ const inputClassName =
   "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:focus:border-brand-800";
 
 export default function StaffTable() {
-  const { t } = useLanguage();
   const { isOpen, openModal, closeModal } = useModal();
   const [rows, setRows] = useState(initialRows);
   const [formKey, setFormKey] = useState(0);
@@ -149,27 +168,21 @@ export default function StaffTable() {
     () =>
       roleKeys.map((key) => ({
         value: key,
-        label: t(`roles.${key}`),
+        label: roleLabels[key],
       })),
-    [t]
+    []
   );
 
   const departmentOptions = useMemo(
     () =>
       departmentKeys.map((key) => ({
         value: key,
-        label: t(`departments.${key}`),
+        label: departmentLabels[key],
       })),
-    [t]
+    []
   );
 
-  const tableHeaders = [
-    t("staff.staff"),
-    t("common.contact"),
-    t("common.role"),
-    t("staff.division"),
-    t("common.status"),
-  ];
+  const tableHeaders = ["Staff", "Contact", "Role", "Division", "Status"];
 
   function resetForm() {
     setName("");
@@ -193,7 +206,7 @@ export default function StaffTable() {
 
   function handleAddStaff() {
     if (!name || !email || !phone || !role || !department) {
-      setFormError(t("common.fillAllFields"));
+      setFormError("Please complete all fields before saving.");
       return;
     }
 
@@ -217,14 +230,14 @@ export default function StaffTable() {
         <div className="flex flex-col gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              {t("staff.title")}
+              Internal Employee List
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {t("staff.description")}
+              Manage internal company team: technicians, programmers, HR, and more
             </p>
           </div>
           <Button size="sm" onClick={handleOpenModal}>
-            {t("staff.addStaff")}
+            Add Staff
           </Button>
         </div>
 
@@ -260,15 +273,15 @@ export default function StaffTable() {
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <Badge size="sm" color={roleColor[row.role]}>
-                      {t(`roles.${row.role}`)}
+                      {roleLabels[row.role]}
                     </Badge>
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                    {t(`departments.${row.department}`)}
+                    {departmentLabels[row.department]}
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <Badge size="sm" color={statusColor[row.status]}>
-                      {t(`status.${row.status}`)}
+                      {statusLabels[row.status]}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -290,35 +303,35 @@ export default function StaffTable() {
           }}
         >
           <h4 className="mb-2 text-lg font-medium text-gray-800 dark:text-white/90">
-            {t("staff.addModalTitle")}
+            Add Internal Employee
           </h4>
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-            {t("staff.addModalDesc")}
+            Add an internal company employee, not hotel staff
           </p>
 
           <div key={formKey} className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
-              <Label>{t("common.name")}</Label>
+              <Label>Name</Label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={t("common.fullName")}
+                placeholder="Full name"
                 className={inputClassName}
               />
             </div>
             <div>
-              <Label>{t("common.email")}</Label>
+              <Label>Email</Label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@perusahaan.id"
+                placeholder="nama@company.id"
                 className={inputClassName}
               />
             </div>
             <div>
-              <Label>{t("common.phone")}</Label>
+              <Label>Phone</Label>
               <input
                 type="text"
                 value={phone}
@@ -328,18 +341,18 @@ export default function StaffTable() {
               />
             </div>
             <div>
-              <Label>{t("common.role")}</Label>
+              <Label>Role</Label>
               <Select
                 options={roleOptions}
-                placeholder={t("common.selectRole")}
+                placeholder="Select role"
                 onChange={(value) => setRole(value as StaffRole)}
               />
             </div>
             <div>
-              <Label>{t("staff.division")}</Label>
+              <Label>Division</Label>
               <Select
                 options={departmentOptions}
-                placeholder={t("common.selectDivision")}
+                placeholder="Select division"
                 onChange={(value) => setDepartment(value as StaffDepartment)}
               />
             </div>
@@ -356,10 +369,10 @@ export default function StaffTable() {
               type="button"
               onClick={handleCloseModal}
             >
-              {t("common.cancel")}
+              Cancel
             </Button>
             <Button size="sm" type="submit">
-              {t("staff.saveStaff")}
+              Save Staff
             </Button>
           </div>
         </form>

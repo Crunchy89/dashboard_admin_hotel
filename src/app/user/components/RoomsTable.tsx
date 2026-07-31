@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 
 type RoomStatus = "online" | "offline" | "maintenance";
 
@@ -79,6 +78,12 @@ const rooms: RoomRow[] = [
   },
 ];
 
+const statusLabels: Record<RoomRow["status"], string> = {
+  online: "Online",
+  offline: "Offline",
+  maintenance: "Maintenance",
+};
+
 const statusColor: Record<RoomRow["status"], "success" | "error" | "warning"> = {
   online: "success",
   offline: "error",
@@ -86,15 +91,13 @@ const statusColor: Record<RoomRow["status"], "success" | "error" | "warning"> = 
 };
 
 export default function RoomsTable() {
-  const { t } = useLanguage();
-
   const tableHeadings = [
-    t("common.room"),
-    t("user.property"),
-    t("user.floor"),
-    t("user.type"),
-    t("common.device"),
-    t("common.status"),
+    "Room",
+    "Property",
+    "Floor",
+    "Type",
+    "Device",
+    "Status",
   ];
 
   return (
@@ -137,7 +140,7 @@ export default function RoomsTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[room.status]}>
-                    {t(`status.${room.status}`)}
+                    {statusLabels[room.status]}
                   </Badge>
                 </TableCell>
               </TableRow>

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function SalaryPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.salary" />
+      <PageBreadcrumb pageTitle="Salary" />
       <SalaryTable />
     </div>
   );

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function MaintenancePage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.maintenance" />
+      <PageBreadcrumb pageTitle="Maintenance" />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 xl:col-span-9">
           <MaintenanceTable />

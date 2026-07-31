@@ -2,26 +2,25 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useLanguage } from "@/context/LanguageContext";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type Period = "monthly" | "yearly";
 
-const MONTH_KEYS = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-] as const;
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const yearlyCategories = ["2022", "2023", "2024", "2025", "2026"];
 
@@ -36,35 +35,28 @@ const yearlyData = {
 };
 
 export default function CustomerMovementChart() {
-  const { t, locale } = useLanguage();
   const [period, setPeriod] = useState<Period>("yearly");
-  const numberLocale = locale === "id" ? "id-ID" : "en-US";
-
-  const monthlyCategories = useMemo(
-    () => MONTH_KEYS.map((key) => t(`months.${key}`)),
-    [t]
-  );
 
   const monthlySeries = useMemo(
     () => [
-      { name: t("dashboard.newCustomers"), data: monthlyData.newCustomers },
+      { name: "New Customers", data: monthlyData.newCustomers },
       {
-        name: t("dashboard.churnedCustomers"),
+        name: "Churned Customers",
         data: monthlyData.churnedCustomers,
       },
     ],
-    [t]
+    []
   );
 
   const yearlySeries = useMemo(
     () => [
-      { name: t("dashboard.newCustomers"), data: yearlyData.newCustomers },
+      { name: "New Customers", data: yearlyData.newCustomers },
       {
-        name: t("dashboard.churnedCustomers"),
+        name: "Churned Customers",
         data: yearlyData.churnedCustomers,
       },
     ],
-    [t]
+    []
   );
 
   const options: ApexOptions = useMemo(
@@ -97,13 +89,13 @@ export default function CustomerMovementChart() {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: period === "monthly" ? monthlyCategories : yearlyCategories,
+        categories: period === "monthly" ? MONTH_LABELS : yearlyCategories,
         axisBorder: { show: false },
         axisTicks: { show: false },
       },
       yaxis: {
         title: {
-          text: t("dashboard.customerCount"),
+          text: "Customer count",
           style: { fontSize: "12px", color: "#98A2B3" },
         },
         labels: {
@@ -117,11 +109,11 @@ export default function CustomerMovementChart() {
       tooltip: {
         y: {
           formatter: (val: number) =>
-            `${val.toLocaleString(numberLocale)} ${t("dashboard.customers")}`,
+            `${val.toLocaleString("en-US")} customers`,
         },
       },
     }),
-    [period, monthlyCategories, t, numberLocale]
+    [period]
   );
 
   const getButtonClass = (value: Period) =>
@@ -134,10 +126,10 @@ export default function CustomerMovementChart() {
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("dashboard.newVsChurn")}
+            New vs Churned Customers
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t("dashboard.acquisitionVsChurn")}
+            Acquisition growth compared to churn
           </p>
         </div>
         <div className="flex items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
@@ -147,7 +139,7 @@ export default function CustomerMovementChart() {
               "monthly"
             )}`}
           >
-            {t("dashboard.monthly")}
+            Monthly
           </button>
           <button
             onClick={() => setPeriod("yearly")}
@@ -155,7 +147,7 @@ export default function CustomerMovementChart() {
               "yearly"
             )}`}
           >
-            {t("dashboard.yearly")}
+            Yearly
           </button>
         </div>
       </div>
@@ -163,7 +155,7 @@ export default function CustomerMovementChart() {
       <div className="mb-4 grid grid-cols-2 gap-3">
         <div className="rounded-xl border border-success-200 bg-success-50 px-3 py-2.5 dark:border-success-500/20 dark:bg-success-500/10">
           <p className="text-xs text-success-600 dark:text-success-500">
-            {t("dashboard.newCustomers2026")}
+            New Customers 2026
           </p>
           <p className="mt-1 text-base font-bold text-success-700 dark:text-success-400">
             1.842
@@ -171,7 +163,7 @@ export default function CustomerMovementChart() {
         </div>
         <div className="rounded-xl border border-error-200 bg-error-50 px-3 py-2.5 dark:border-error-500/20 dark:bg-error-500/10">
           <p className="text-xs text-error-600 dark:text-error-500">
-            {t("dashboard.churnedCustomers2026")}
+            Churned Customers 2026
           </p>
           <p className="mt-1 text-base font-bold text-error-700 dark:text-error-400">
             312

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function StaffPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.staff" />
+      <PageBreadcrumb pageTitle="Staff" />
       <StaffTable />
     </div>
   );

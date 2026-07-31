@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 
 type PackageStatus = "active" | "draft";
 type Segment = "smartHotel" | "smartHome";
@@ -89,21 +88,29 @@ const packages: PackageRow[] = [
   },
 ];
 
+const segmentLabels: Record<Segment, string> = {
+  smartHotel: "Smart Hotel",
+  smartHome: "Smart Home",
+};
+
+const statusLabels: Record<PackageStatus, string> = {
+  active: "Active",
+  draft: "Draft",
+};
+
 const statusColor: Record<PackageStatus, "success" | "warning"> = {
   active: "success",
   draft: "warning",
 };
 
 export default function PackagesTable() {
-  const { t, locale } = useLanguage();
-
   const tableHeadings = [
-    t("common.package"),
-    t("common.segment"),
-    t("user.limit"),
-    t("user.price"),
-    t("user.subscribers"),
-    t("common.status"),
+    "Package",
+    "Segment",
+    "Limit",
+    "Price",
+    "Subscribers",
+    "Status",
   ];
 
   return (
@@ -133,7 +140,7 @@ export default function PackagesTable() {
                   <p className="text-theme-xs text-gray-400">{pkg.id}</p>
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                  {t(`segments.${pkg.segment}`)}
+                  {segmentLabels[pkg.segment]}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
                   {pkg.limit}
@@ -142,11 +149,11 @@ export default function PackagesTable() {
                   {pkg.price}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-800 dark:text-white/90">
-                  {pkg.subscribers.toLocaleString(locale === "id" ? "id-ID" : "en-US")}
+                  {pkg.subscribers.toLocaleString("en-US")}
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[pkg.status]}>
-                    {t(`status.${pkg.status}`)}
+                    {statusLabels[pkg.status]}
                   </Badge>
                 </TableCell>
               </TableRow>

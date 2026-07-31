@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useTheme, type ThemeMode } from "@/context/ThemeContext";
-import { useLanguage } from "@/context/LanguageContext";
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
 
@@ -97,13 +96,12 @@ const options: ThemeMode[] = ["light", "dark", "auto"];
 
 export const ThemeToggleButton: React.FC = () => {
   const { themeMode, resolvedTheme, setThemeMode } = useTheme();
-  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   const labels: Record<ThemeMode, string> = {
-    light: t("theme.lightMode"),
-    dark: t("theme.darkMode"),
-    auto: t("theme.autoMode"),
+    light: "Light mode",
+    dark: "Night mode",
+    auto: "Auto",
   };
 
   function toggleDropdown(event: React.MouseEvent<HTMLButtonElement>) {
@@ -156,7 +154,7 @@ export const ThemeToggleButton: React.FC = () => {
         className="right-0 mt-[17px] w-[220px] rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <p className="px-3 py-2 text-xs text-gray-500 dark:text-gray-400">
-          {t("theme.appearance")}
+          Appearance
         </p>
         <ul className="flex flex-col gap-1">
           {options.map((mode) => (
@@ -176,7 +174,7 @@ export const ThemeToggleButton: React.FC = () => {
           ))}
         </ul>
         <p className="px-3 pt-2 text-xs text-gray-400 dark:text-gray-500">
-          {t("theme.autoHint")}
+          Auto uses light mode during the day and night mode after sunset.
         </p>
       </Dropdown>
     </div>

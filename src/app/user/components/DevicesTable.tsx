@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 
 type DeviceStatus = "online" | "offline" | "error";
 
@@ -79,6 +78,12 @@ const devices: DeviceRow[] = [
   },
 ];
 
+const statusLabels: Record<DeviceRow["status"], string> = {
+  online: "Online",
+  offline: "Offline",
+  error: "Error",
+};
+
 const statusColor: Record<DeviceRow["status"], "success" | "error" | "warning"> =
   {
     online: "success",
@@ -87,15 +92,13 @@ const statusColor: Record<DeviceRow["status"], "success" | "error" | "warning"> 
   };
 
 export default function DevicesTable() {
-  const { t } = useLanguage();
-
   const tableHeadings = [
-    t("common.device"),
-    t("user.type"),
-    t("user.property"),
-    t("common.room"),
-    t("common.firmware"),
-    t("common.status"),
+    "Device",
+    "Type",
+    "Property",
+    "Room",
+    "Firmware",
+    "Status",
   ];
 
   return (
@@ -138,7 +141,7 @@ export default function DevicesTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[device.status]}>
-                    {t(`status.${device.status}`)}
+                    {statusLabels[device.status]}
                   </Badge>
                 </TableCell>
               </TableRow>

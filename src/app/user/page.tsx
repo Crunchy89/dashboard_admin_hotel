@@ -5,13 +5,13 @@ import React from "react";
 
 export const metadata: Metadata = {
   title: "List User | Smart Hotel Admin",
-  description: "Daftar user Smart Hotel & Smart Home",
+  description: "Smart Hotel & Smart Home user list",
 };
 
 export default function UsersPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.listUser" />
+      <PageBreadcrumb pageTitle="List User" />
       <UsersTable />
     </div>
   );

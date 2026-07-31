@@ -2,26 +2,25 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useLanguage } from "@/context/LanguageContext";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type Period = "monthly" | "yearly";
 
-const MONTH_KEYS = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-] as const;
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const yearlyCategories = ["2022", "2023", "2024", "2025", "2026"];
 
@@ -36,28 +35,22 @@ const yearlyData = {
 };
 
 export default function SegmentRevenueChart() {
-  const { t } = useLanguage();
   const [period, setPeriod] = useState<Period>("yearly");
-
-  const monthlyCategories = useMemo(
-    () => MONTH_KEYS.map((key) => t(`months.${key}`)),
-    [t]
-  );
 
   const monthlySeries = useMemo(
     () => [
-      { name: t("dashboard.smartHotel"), data: monthlyData.smartHotel },
-      { name: t("dashboard.smartHome"), data: monthlyData.smartHome },
+      { name: "Smart Hotel", data: monthlyData.smartHotel },
+      { name: "Smart Home", data: monthlyData.smartHome },
     ],
-    [t]
+    []
   );
 
   const yearlySeries = useMemo(
     () => [
-      { name: t("dashboard.smartHotel"), data: yearlyData.smartHotel },
-      { name: t("dashboard.smartHome"), data: yearlyData.smartHome },
+      { name: "Smart Hotel", data: yearlyData.smartHotel },
+      { name: "Smart Home", data: yearlyData.smartHome },
     ],
-    [t]
+    []
   );
 
   const options: ApexOptions = useMemo(
@@ -91,13 +84,13 @@ export default function SegmentRevenueChart() {
         colors: ["transparent"],
       },
       xaxis: {
-        categories: period === "monthly" ? monthlyCategories : yearlyCategories,
+        categories: period === "monthly" ? MONTH_LABELS : yearlyCategories,
         axisBorder: { show: false },
         axisTicks: { show: false },
       },
       yaxis: {
         title: {
-          text: t("dashboard.segmentRevenueYAxis"),
+          text: "Revenue (IDR billion)",
           style: { fontSize: "12px", color: "#98A2B3" },
         },
         labels: {
@@ -114,7 +107,7 @@ export default function SegmentRevenueChart() {
         },
       },
     }),
-    [period, monthlyCategories, t]
+    [period]
   );
 
   const getButtonClass = (value: Period) =>
@@ -127,10 +120,10 @@ export default function SegmentRevenueChart() {
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("dashboard.segmentRevenueTitle")}
+            Revenue Smart Hotel vs Smart Home
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t("dashboard.segmentRevenue")}
+            Revenue contribution per segment (IDR billion)
           </p>
         </div>
         <div className="flex items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
@@ -140,7 +133,7 @@ export default function SegmentRevenueChart() {
               "monthly"
             )}`}
           >
-            {t("dashboard.monthly")}
+            Monthly
           </button>
           <button
             onClick={() => setPeriod("yearly")}
@@ -148,7 +141,7 @@ export default function SegmentRevenueChart() {
               "yearly"
             )}`}
           >
-            {t("dashboard.yearly")}
+            Yearly
           </button>
         </div>
       </div>

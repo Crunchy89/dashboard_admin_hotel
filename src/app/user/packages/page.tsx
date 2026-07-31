@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Paket | Smart Hotel Admin",
-  description: "Daftar paket subscription",
+  title: "Packages | Smart Hotel Admin",
+  description: "Subscription package list",
 };
 
 export default function PackagesPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.packages" />
+      <PageBreadcrumb pageTitle="Packages" />
       <PackagesTable />
     </div>
   );

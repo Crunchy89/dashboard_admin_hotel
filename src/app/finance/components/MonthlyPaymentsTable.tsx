@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 
 type PaymentStatus = "paid" | "pending" | "failed" | "overdue";
 type Segment = "smartHotel" | "smartHome";
@@ -139,6 +138,25 @@ const payments: PaymentRow[] = [
   },
 ];
 
+const segmentLabels: Record<Segment, string> = {
+  smartHotel: "Smart Hotel",
+  smartHome: "Smart Home",
+};
+
+const methodLabels: Record<PaymentMethod, string> = {
+  bankTransfer: "Bank Transfer",
+  virtualAccount: "Virtual Account",
+  eWallet: "E-Wallet",
+  creditCard: "Credit Card",
+};
+
+const statusLabels: Record<PaymentStatus, string> = {
+  paid: "Paid",
+  pending: "Pending",
+  failed: "Failed",
+  overdue: "Overdue",
+};
+
 const statusColor: Record<
   PaymentStatus,
   "success" | "warning" | "error" | "primary"
@@ -150,24 +168,22 @@ const statusColor: Record<
 };
 
 export default function MonthlyPaymentsTable() {
-  const { t } = useLanguage();
-
   const summary = [
-    { labelKey: "finance.totalBillJuly", value: "Rp 402 jt" },
-    { labelKey: "finance.paidSummary", value: "Rp 372 jt" },
-    { labelKey: "finance.pendingOverdueSummary", value: "Rp 30 jt" },
-    { labelKey: "finance.collectionRate", value: "92.5%" },
+    { label: "Total Bill July", value: "Rp 402 jt" },
+    { label: "Paid", value: "Rp 372 jt" },
+    { label: "Pending / Overdue", value: "Rp 30 jt" },
+    { label: "Collection Rate", value: "92.5%" },
   ];
 
   const tableHeadings = [
-    t("common.invoice"),
-    t("common.user"),
-    t("common.package"),
-    t("common.period"),
-    t("finance.amount"),
-    t("finance.method"),
-    t("finance.paymentDate"),
-    t("common.status"),
+    "Invoice",
+    "User",
+    "Package",
+    "Period",
+    "Amount",
+    "Method",
+    "Payment Date",
+    "Status",
   ];
 
   return (
@@ -175,11 +191,11 @@ export default function MonthlyPaymentsTable() {
       <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {summary.map((item) => (
           <div
-            key={item.labelKey}
+            key={item.label}
             className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]"
           >
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {t(item.labelKey)}
+              {item.label}
             </p>
             <p className="mt-2 text-lg font-bold text-gray-800 dark:text-white/90">
               {item.value}
@@ -191,10 +207,10 @@ export default function MonthlyPaymentsTable() {
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="border-b border-gray-100 px-5 py-4 dark:border-gray-800">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("finance.monthlyPayments")}
+            Monthly User Payments
           </h3>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {t("finance.paymentHistory")}
+            Subscription billing history by period
           </p>
         </div>
 
@@ -221,7 +237,7 @@ export default function MonthlyPaymentsTable() {
                       {payment.id}
                     </p>
                     <p className="text-theme-xs text-gray-400">
-                      {t(`segments.${payment.segment}`)}
+                      {segmentLabels[payment.segment]}
                     </p>
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-800 dark:text-white/90">
@@ -237,14 +253,14 @@ export default function MonthlyPaymentsTable() {
                     {payment.amount}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                    {t(`finance.${payment.method}`)}
+                    {methodLabels[payment.method]}
                   </TableCell>
                   <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
                     {payment.paidAt}
                   </TableCell>
                   <TableCell className="px-5 py-4">
                     <Badge size="sm" color={statusColor[payment.status]}>
-                      {t(`status.${payment.status}`)}
+                      {statusLabels[payment.status]}
                     </Badge>
                   </TableCell>
                 </TableRow>

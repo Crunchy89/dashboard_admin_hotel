@@ -1,21 +1,11 @@
-"use client";
-
 import Link from "next/link";
 import React from "react";
-import { useLanguage } from "@/context/LanguageContext";
 
 interface BreadcrumbProps {
-  pageTitleKey?: string;
-  pageTitle?: string;
+  pageTitle: string;
 }
 
-const PageBreadcrumb: React.FC<BreadcrumbProps> = ({
-  pageTitleKey,
-  pageTitle: pageTitleProp,
-}) => {
-  const { t } = useLanguage();
-  const pageTitle = pageTitleKey ? t(pageTitleKey) : pageTitleProp ?? "";
-
+const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
       <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">
@@ -28,7 +18,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({
               className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
               href="/dashboard"
             >
-              {t("nav.dashboard")}
+              Dashboard
               <svg
                 className="stroke-current"
                 width="17"

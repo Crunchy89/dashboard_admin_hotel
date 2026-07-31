@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { useLanguage } from "@/context/LanguageContext";
 
 interface ChatThread {
   id: string;
@@ -22,7 +21,7 @@ const chatThreads: ChatThread[] = [
   {
     id: "c1",
     user: "Nusantara Boutique Inn",
-    preview: "Bagaimana cara pairing device baru?",
+    preview: "How do I pair a new device?",
     unread: 2,
     time: "10:40",
     isNew: true,
@@ -30,7 +29,7 @@ const chatThreads: ChatThread[] = [
   {
     id: "c2",
     user: "Apartment Serenia",
-    preview: "Paket Basic apakah support kamera?",
+    preview: "Does the Basic package support cameras?",
     unread: 1,
     time: "10:18",
     isNew: true,
@@ -38,7 +37,7 @@ const chatThreads: ChatThread[] = [
   {
     id: "c3",
     user: "Villa Melati",
-    preview: "Terima kasih, sudah berhasil.",
+    preview: "Thanks, it worked.",
     unread: 0,
     time: "09:55",
     isNew: false,
@@ -46,7 +45,7 @@ const chatThreads: ChatThread[] = [
   {
     id: "c4",
     user: "Grand Horizon Hotel",
-    preview: "Minta jadwal teknisi untuk lantai 2",
+    preview: "Request technician schedule for floor 2",
     unread: 0,
     time: "yesterday",
     isNew: false,
@@ -58,13 +57,13 @@ const initialMessages: Record<string, ChatMessage[]> = {
     {
       id: "m1",
       from: "user",
-      text: "Halo, kami user baru. Bagaimana cara pairing device baru?",
+      text: "Hi, we are a new user. How do I pair a new device?",
       time: "10:38",
     },
     {
       id: "m2",
       from: "user",
-      text: "Sudah coba scan QR tapi gagal.",
+      text: "We tried scanning the QR code but it failed.",
       time: "10:40",
     },
   ],
@@ -72,7 +71,7 @@ const initialMessages: Record<string, ChatMessage[]> = {
     {
       id: "m1",
       from: "user",
-      text: "Paket Basic apakah support kamera?",
+      text: "Does the Basic package support cameras?",
       time: "10:18",
     },
   ],
@@ -80,19 +79,19 @@ const initialMessages: Record<string, ChatMessage[]> = {
     {
       id: "m1",
       from: "user",
-      text: "Sensor sudah terpasang, masih error.",
+      text: "The sensor is installed but still showing an error.",
       time: "09:40",
     },
     {
       id: "m2",
       from: "admin",
-      text: "Silakan restart gateway lalu coba lagi ya.",
+      text: "Please restart the gateway and try again.",
       time: "09:48",
     },
     {
       id: "m3",
       from: "user",
-      text: "Terima kasih, sudah berhasil.",
+      text: "Thanks, it worked.",
       time: "09:55",
     },
   ],
@@ -100,20 +99,19 @@ const initialMessages: Record<string, ChatMessage[]> = {
     {
       id: "m1",
       from: "user",
-      text: "Minta jadwal teknisi untuk lantai 2.",
+      text: "Requesting a technician schedule for floor 2.",
       time: "yesterday",
     },
     {
       id: "m2",
       from: "admin",
-      text: "Baik, teknisi bisa datang Kamis pukul 10:00.",
+      text: "Sure, a technician can come Thursday at 10:00 AM.",
       time: "yesterday",
     },
   ],
 };
 
 export default function ChatInbox() {
-  const { t, locale } = useLanguage();
   const [activeChat, setActiveChat] = useState(chatThreads[0].id);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState(initialMessages);
@@ -122,7 +120,7 @@ export default function ChatInbox() {
   const activeMessages = messages[activeChat] || [];
 
   function formatTime(time: string) {
-    if (time === "yesterday") return t("chat.yesterday");
+    if (time === "yesterday") return "Yesterday";
     return time;
   }
 
@@ -132,7 +130,7 @@ export default function ChatInbox() {
       id: crypto.randomUUID(),
       from: "admin",
       text: draft.trim(),
-      time: new Date().toLocaleTimeString(locale === "id" ? "id-ID" : "en-US", {
+      time: new Date().toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
       }),
@@ -150,10 +148,10 @@ export default function ChatInbox() {
         <div className="border-b border-gray-100 dark:border-gray-800 lg:border-b-0 lg:border-r">
           <div className="border-b border-gray-100 px-4 py-4 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              {t("chat.inboxTitle")}
+              Messages
             </h3>
             <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-              {t("chat.inboxDesc")}
+              Manage questions from users
             </p>
           </div>
           <div className="custom-scrollbar h-[calc(100%-76px)] space-y-2 overflow-y-auto p-3">
@@ -187,7 +185,7 @@ export default function ChatInbox() {
                 </div>
                 {thread.isNew && (
                   <span className="mt-1 inline-block text-[10px] font-medium text-success-600">
-                    {t("chat.newUser")}
+                    New user
                   </span>
                 )}
               </button>
@@ -202,8 +200,8 @@ export default function ChatInbox() {
             </h4>
             <p className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">
               {activeThread.isNew
-                ? t("chat.newUserReply")
-                : t("chat.activeConversation")}
+                ? "New user — reply to their question"
+                : "Active conversation"}
             </p>
           </div>
 
@@ -243,14 +241,14 @@ export default function ChatInbox() {
                 onKeyDown={(e) => {
                   if (e.key === "Enter") sendMessage();
                 }}
-                placeholder={t("chat.replyPlaceholder")}
+                placeholder="Write a reply to the user..."
                 className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 outline-none focus:border-brand-300 dark:border-gray-700 dark:text-white/90"
               />
               <button
                 onClick={sendMessage}
                 className="h-11 shrink-0 rounded-lg bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600"
               >
-                {t("chat.send")}
+                Send
               </button>
             </div>
           </div>

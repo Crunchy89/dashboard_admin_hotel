@@ -3,15 +3,14 @@ import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { useLanguage } from "@/context/LanguageContext";
 
 type ReportType = "user" | "disconnected" | "error";
 
 interface ReportItem {
   id: string;
   type: ReportType;
-  titleKey: string;
-  detailKey: string;
+  title: string;
+  detail: string;
   timeValue: number;
   timeUnit: "minutes" | "hours";
 }
@@ -20,76 +19,75 @@ const reportItems: ReportItem[] = [
   {
     id: "1",
     type: "error",
-    titleKey: "header.deviceError",
-    detailKey: "header.reportDetail1",
+    title: "Device Error",
+    detail: "Motion Sensor Hall · Oceanview Suites · Room 312",
     timeValue: 2,
     timeUnit: "minutes",
   },
   {
     id: "2",
     type: "disconnected",
-    titleKey: "header.deviceDisconnected",
-    detailKey: "header.reportDetail2",
+    title: "Device Disconnected",
+    detail: "Camera Entrance · Rumah Aruna · Main Unit",
     timeValue: 12,
     timeUnit: "minutes",
   },
   {
     id: "3",
     type: "user",
-    titleKey: "header.userReport",
-    detailKey: "header.reportDetail3",
+    title: "User Report",
+    detail: "Skyline Business Hotel reports lock not responding",
     timeValue: 28,
     timeUnit: "minutes",
   },
   {
     id: "4",
     type: "disconnected",
-    titleKey: "header.deviceDisconnected",
-    detailKey: "header.reportDetail4",
+    title: "Device Disconnected",
+    detail: "Smart Lock B3 · Skyline Business Hotel · Room 408",
     timeValue: 1,
     timeUnit: "hours",
   },
   {
     id: "5",
     type: "user",
-    titleKey: "header.userReport",
-    detailKey: "header.reportDetail5",
+    title: "User Report",
+    detail: "Villa Melati requests help setting up new sensor",
     timeValue: 2,
     timeUnit: "hours",
   },
   {
     id: "6",
     type: "error",
-    titleKey: "header.deviceError",
-    detailKey: "header.reportDetail6",
+    title: "Device Error",
+    detail: "Thermostat Zone 2 · Grand Horizon Hotel · Room 205",
     timeValue: 3,
     timeUnit: "hours",
   },
 ];
 
 export default function NotificationDropdown() {
-  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
 
   const typeStyle = useMemo<
-    Record<ReportType, { badge: string; labelKey: string }>
+    Record<ReportType, { badge: string; label: string }>
   >(
     () => ({
       user: {
         badge:
           "bg-brand-50 text-brand-500 dark:bg-brand-500/15 dark:text-brand-400",
-        labelKey: "header.reportTypeUser",
+        label: "User",
       },
       disconnected: {
         badge:
           "bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400",
-        labelKey: "header.reportTypeDisconnected",
+        label: "Disconnected",
       },
       error: {
         badge:
           "bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500",
-        labelKey: "header.reportTypeError",
+        label: "Error",
       },
     }),
     []
@@ -109,14 +107,14 @@ export default function NotificationDropdown() {
   };
 
   const formatTimeAgo = (value: number, unit: "minutes" | "hours") =>
-    `${value} ${t(unit === "minutes" ? "header.minutesAgo" : "header.hoursAgo")}`;
+    `${value} ${unit === "minutes" ? "minutes ago" : "hours ago"}`;
 
   return (
     <div className="relative">
       <button
         className="relative dropdown-toggle flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
         onClick={handleClick}
-        aria-label={t("header.notifications")}
+        aria-label="Notifications"
       >
         <span
           className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400 ${
@@ -148,7 +146,7 @@ export default function NotificationDropdown() {
       >
         <div className="mb-3 flex items-center justify-between border-b border-gray-100 pb-3 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-            {t("header.notifications")}
+            Notifications
           </h5>
           <button
             onClick={toggleDropdown}
@@ -182,16 +180,16 @@ export default function NotificationDropdown() {
               >
                 <span className="flex items-center justify-between gap-2">
                   <span className="font-medium text-theme-sm text-gray-800 dark:text-white/90">
-                    {t(report.titleKey)}
+                    {report.title}
                   </span>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${typeStyle[report.type].badge}`}
                   >
-                    {t(typeStyle[report.type].labelKey)}
+                    {typeStyle[report.type].label}
                   </span>
                 </span>
                 <span className="text-theme-sm text-gray-500 dark:text-gray-400">
-                  {t(report.detailKey)}
+                  {report.detail}
                 </span>
                 <span className="text-theme-xs text-gray-400">
                   {formatTimeAgo(report.timeValue, report.timeUnit)}
@@ -205,7 +203,7 @@ export default function NotificationDropdown() {
           href="/laporan"
           className="mt-3 block rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         >
-          {t("header.viewAllReports")}
+          View All Reports
         </Link>
       </Dropdown>
     </div>

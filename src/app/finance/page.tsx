@@ -4,14 +4,14 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Keuangan | Smart Hotel Admin",
-  description: "Pembayaran bulanan user Smart Hotel & Smart Home",
+  title: "Finance | Smart Hotel Admin",
+  description: "Monthly Smart Hotel & Smart Home user payments",
 };
 
 export default function FinancePage() {
   return (
     <div>
-      <PageBreadcrumb pageTitleKey="nav.finance" />
+      <PageBreadcrumb pageTitle="Finance" />
       <MonthlyPaymentsTable />
     </div>
   );

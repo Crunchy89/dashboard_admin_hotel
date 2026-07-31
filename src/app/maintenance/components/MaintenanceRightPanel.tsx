@@ -1,7 +1,6 @@
 "use client";
 
 import Badge from "@/components/ui/badge/Badge";
-import { useLanguage } from "@/context/LanguageContext";
 
 type MaintenanceStatus = "scheduled" | "inProgress" | "completed";
 
@@ -28,7 +27,7 @@ const upcoming = [
     device: "Gateway Hub",
     whenType: "date" as const,
     day: "5",
-    monthKey: "aug" as const,
+    month: "Aug",
     time: "15:00",
     status: "scheduled" as MaintenanceStatus,
   },
@@ -40,24 +39,28 @@ const stats: { status: MaintenanceStatus; value: string; color: string }[] = [
   { status: "completed", value: "1", color: "text-success-600" },
 ];
 
-export default function MaintenanceRightPanel() {
-  const { t } = useLanguage();
+const statusLabels: Record<MaintenanceStatus, string> = {
+  scheduled: "Scheduled",
+  inProgress: "In Progress",
+  completed: "Completed",
+};
 
+export default function MaintenanceRightPanel() {
   function formatWhen(item: (typeof upcoming)[number]) {
     if (item.whenType === "today") {
-      return `${t("maintenance.today")} · ${item.time}`;
+      return `Today · ${item.time}`;
     }
     if (item.whenType === "tomorrow") {
-      return `${t("maintenance.tomorrow")} · ${item.time}`;
+      return `Tomorrow · ${item.time}`;
     }
-    return `${item.day} ${t(`months.${item.monthKey}`)} · ${item.time}`;
+    return `${item.day} ${item.month} · ${item.time}`;
   }
 
   return (
     <div className="space-y-4 xl:sticky xl:top-24">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {t("maintenance.summary")}
+          Summary
         </h3>
         <div className="mt-4 grid grid-cols-3 gap-2">
           {stats.map((item) => (
@@ -67,7 +70,7 @@ export default function MaintenanceRightPanel() {
             >
               <p className={`text-xl font-bold ${item.color}`}>{item.value}</p>
               <p className="mt-1 text-xs text-gray-400">
-                {t(`status.${item.status}`)}
+                {statusLabels[item.status]}
               </p>
             </div>
           ))}
@@ -76,7 +79,7 @@ export default function MaintenanceRightPanel() {
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {t("maintenance.upcoming")}
+          Upcoming
         </h3>
         <div className="mt-4 space-y-3">
           {upcoming.map((item) => (
@@ -90,11 +93,11 @@ export default function MaintenanceRightPanel() {
                     {item.device}
                   </p>
                   <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
-                    {item.hotel} · {t("common.room")} {item.room}
+                    {item.hotel} · Room {item.room}
                   </p>
                 </div>
                 <Badge size="sm" color="primary">
-                  {t(`status.${item.status}`)}
+                  {statusLabels[item.status]}
                 </Badge>
               </div>
               <p className="mt-2 text-xs text-gray-400">{formatWhen(item)}</p>

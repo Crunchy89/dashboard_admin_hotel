@@ -8,7 +8,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useLanguage } from "@/context/LanguageContext";
 
 type UserStatus = "active" | "trial" | "inactive";
 type Segment = "smartHotel" | "smartHome";
@@ -87,6 +86,17 @@ const users: UserRow[] = [
   },
 ];
 
+const segmentLabels: Record<Segment, string> = {
+  smartHotel: "Smart Hotel",
+  smartHome: "Smart Home",
+};
+
+const statusLabels: Record<UserStatus, string> = {
+  active: "Active",
+  trial: "Trial",
+  inactive: "Inactive",
+};
+
 const statusColor: Record<UserStatus, "success" | "warning" | "error"> = {
   active: "success",
   trial: "warning",
@@ -94,15 +104,13 @@ const statusColor: Record<UserStatus, "success" | "warning" | "error"> = {
 };
 
 export default function UsersTable() {
-  const { t } = useLanguage();
-
   const tableHeadings = [
-    t("common.user"),
-    t("common.segment"),
-    t("common.package"),
-    t("common.room"),
-    t("common.device"),
-    t("common.status"),
+    "User",
+    "Segment",
+    "Package",
+    "Room",
+    "Device",
+    "Status",
   ];
 
   return (
@@ -134,7 +142,7 @@ export default function UsersTable() {
                   </p>
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
-                  {t(`segments.${user.segment}`)}
+                  {segmentLabels[user.segment]}
                 </TableCell>
                 <TableCell className="px-5 py-4 text-theme-sm text-gray-500 dark:text-gray-400">
                   {user.packageName}
@@ -147,7 +155,7 @@ export default function UsersTable() {
                 </TableCell>
                 <TableCell className="px-5 py-4">
                   <Badge size="sm" color={statusColor[user.status]}>
-                    {t(`status.${user.status}`)}
+                    {statusLabels[user.status]}
                   </Badge>
                 </TableCell>
               </TableRow>
