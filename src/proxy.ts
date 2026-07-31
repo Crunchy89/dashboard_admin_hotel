@@ -8,6 +8,7 @@ const PROTECTED_PREFIXES = [
   "/dashboard",
   "/user",
   "/staff",
+  "/client-points",
   "/finance",
   "/salary",
   "/chat",

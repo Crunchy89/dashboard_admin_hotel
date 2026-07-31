@@ -14,6 +14,7 @@ import {
   GroupIcon,
   HorizontaLDots,
   ListIcon,
+  ShootingStarIcon,
   TaskIcon,
   UserCircleIcon,
 } from "../icon";
@@ -55,6 +56,11 @@ const navItems: NavItem[] = [
     icon: <GroupIcon />,
     name: "Staff",
     path: "/staff",
+  },
+  {
+    icon: <ShootingStarIcon />,
+    name: "Client Points",
+    path: "/client-points",
   },
   {
     icon: <UserCircleIcon />,
