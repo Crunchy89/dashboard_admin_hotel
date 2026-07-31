@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
@@ -7,8 +6,15 @@ import { Modal } from "../ui/modal";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Button from "../ui/button/Button";
+import { clearAuthCookie, clearAuthUser } from "@/lib/auth";
+import { clearCredentials } from "@/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 
 export default function UserDropdown() {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
   const [isOpen, setIsOpen] = useState(false);
   const [isPasswordOpen, setIsPasswordOpen] = useState(false);
 
@@ -26,13 +32,23 @@ export default function UserDropdown() {
     setIsPasswordOpen(true);
   }
 
+  function handleLogout() {
+    clearAuthCookie();
+    clearAuthUser();
+    dispatch(clearCredentials());
+    closeDropdown();
+    router.replace("/");
+  }
+
+  const displayName = user?.username ?? "admin";
+
   return (
     <div className="relative">
       <button
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
-        <span className="block mr-1 font-medium text-theme-sm">admin</span>
+        <span className="block mr-1 font-medium text-theme-sm">{displayName}</span>
 
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
@@ -64,7 +80,7 @@ export default function UserDropdown() {
             Username
           </span>
           <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-            admin
+            {displayName}
           </span>
         </div>
 
@@ -79,12 +95,13 @@ export default function UserDropdown() {
           </li>
         </ul>
 
-        <Link
-          href="/signin"
+        <button
+          type="button"
+          onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2 mt-1 font-medium text-error-600 rounded-lg group text-theme-sm hover:bg-error-50 dark:text-error-500 dark:hover:bg-white/5"
         >
           Logout
-        </Link>
+        </button>
       </Dropdown>
 
       <Modal
